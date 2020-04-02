@@ -1,0 +1,28 @@
+.column {
+    float: left;
+    width: 33.3%;
+    height: 100%;
+    margin: auto;
+}
+
+#check {
+    width: 25%;
+    height: 5%;
+    margin-top: 5%;
+    margin-left: 20%;
+}
+
+#save {
+    width: 25%;
+    height: 5%;
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+#what-i-can-make {
+    width: 90%;
+    height: 85%;
+    margin-left: 5%;
+    margin-top: 5%;
+    border: 1px solid black;
+}
