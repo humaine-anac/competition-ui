@@ -3,6 +3,7 @@ import ColumnOne from "../classes/ColumnOne";
 import ColumnTwo from "../classes/ColumnTwo";
 import ColumnThree from "../classes/ColumnThree";
 import '../styles/App.css';
+import '../styles/human.css';
 
 class App extends Component {
 

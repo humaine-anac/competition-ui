@@ -1,26 +1,21 @@
 html {
     height: 100%;
     width: 100%;
+    line-height: 1.15; /* 1 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+    background-color: slategray;
+    overflow: hidden;
 }
 
 body {
     height: 100%;
     width: 100%;
+    margin: 10px 2%;
+    background-color: slategray;
 }
 
 #root {
     height: 100%;
     width: 100%;
-}
-
-.addmargin {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.centeralign {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
+    background-color: slategray;
 }

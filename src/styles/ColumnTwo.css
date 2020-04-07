@@ -1,28 +1,24 @@
-.column {
-    float: left;
-    width: 33.3%;
-    height: 100%;
-    margin: auto;
-}
-
-#check {
-    width: 25%;
+button {
+    width: 20%;
     height: 5%;
     margin-top: 5%;
-    margin-left: 20%;
-}
-
-#save {
-    width: 25%;
-    height: 5%;
-    margin-top: 5%;
-    margin-left: 5%;
+    margin-left: 10%;
 }
 
 #what-i-can-make {
+    position: relative;
     width: 90%;
-    height: 85%;
-    margin-left: 5%;
+    min-height: 75%;
+    max-height: 75%;
+    margin: auto;
     margin-top: 5%;
-    border: 1px solid black;
+    padding: 1%;
+    font-size: var(--main-sub-text-font-size);
+    display: block;
+    overflow: scroll;
+}
+
+#what-i-can-make-inner {
+    overflow: scroll;
+    position: absolute;
 }

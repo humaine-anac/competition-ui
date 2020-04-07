@@ -4,3 +4,21 @@
     display: table;
     clear: both
 }
+
+.column {
+    float: left;
+    width: 33.3%;
+    height: 100%;
+    margin: auto;
+    overflow: scroll;
+}
+
+.unifiedSchema {
+    background-color: #CDE2F4;
+    border: 5px solid #DDA448;
+}
+
+:root {
+    --main-sub-text-font-size: 18px;
+    --main-title-text-font-size: 24px;
+  }

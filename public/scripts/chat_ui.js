@@ -2,22 +2,37 @@
 const colors = {"Celia": "blue", "Watson": "green", "User": "red"};
 var quantities_set = 0;
 
-
 $(document).ready(function(e) {
 
-    navigator.permissions.query({name:'microphone', audio: true})
-    .then(function(result) {
-        if (result.state == 'granted') {
-            console.log("granted");
-        } else if (result.state == 'prompt') {
-            console.log("prompted");
-        } else if (result.state == 'denied') {
-            console.log("denied");
-        }
-        result.onchange = function() {
+    function getSpeech() {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
 
-        };
-    });
+                var recorder = new MediaRecorder(stream);
+                recorder.start();
+                console.log(recorder.state);
+    
+                var chunks = [];
+    
+                recorder.addEventListener("dataavailable", event => {
+                    chunks.push(event.data);
+                });
+    
+                recorder.addEventListener("stop", () => {
+                    var blob = new Blob(chunks);
+                    var url= URL.createObjectURL(blob);
+                    var audio = new Audio(url);
+
+                    console.log(audio);
+                });
+    
+                $("img").on("mouseleave", function() {
+                    $("#" + this.id).css("border","1px solid black");
+                    console.log(recorder.state);
+                    recorder.stop();
+                });
+        });
+    }
     
     // client side server to connect to NodeJS server
     var sock = new WebSocket("ws://" + location.hostname + ":2501/");
@@ -49,60 +64,16 @@ $(document).ready(function(e) {
 
     // start round
     $("#start").on("click", function(eve) {
-        // get duration data
-        var round = $("#timer_2")[0].value;
-        var post = $("#timer_3")[0].value;
-        var warmup = $("#timer_1")[0].value;
 
         // send to node server
-        var json = {purpose:"newRound", data:{start:round, end:post, pre:warmup}};
+        var json = {purpose:"newRound"};
         sock.send(data=JSON.stringify(json));
-
-        // WARMUP TIMER
-        $("#roundTimerHeader")[0].innerHTML = "Warmup Time:";
-        $("#roundTimer")[0].innerHTML = warmup;
-        var timer1 = setInterval(function(){
-            $("#roundTimer")[0].innerHTML -= 1;
-
-            if($("#roundTimer")[0].innerHTML <= 0) {
-                clearInterval(timer1);
-
-                // ROUND TIMER
-                $("#roundTimerHeader")[0].innerHTML = "Negotiation Time:";
-                $("#roundTimer")[0].innerHTML = round;
-                var timer2 = setInterval(function() {
-                    $("#roundTimer")[0].innerHTML -= 1;
-        
-                    if($("#roundTimer")[0].innerHTML <= 0) {
-                        clearInterval(timer2);
-
-
-                        // ALLOCATION TIMER
-                        $("#roundTimerHeader")[0].innerHTML = "Allocation Time:";
-                        $("#roundTimer")[0].innerHTML = post;
-                        var timer3 = setInterval(function() {
-                            $("#roundTimer")[0].innerHTML -= 1;
-
-                            if($("#roundTimer")[0].innerHTML <= 0) {
-                                $("#roundTimerHeader")[0].innerHTML = "Post-game:";
-                                clearInterval(timer3);
-                            }
-                        }, 1000);
-
-                    }
-                }, 1000);
-            }
-        }, 1000);
     });
-
-
 
     $("img").on("mouseenter", function() {
         $("#" + this.id).css("border","1px solid red");
-    });
 
-    $("img").on("mouseleave", function() {
-        $("#" + this.id).css("border","1px solid black");
+        getSpeech();
     });
 
 
@@ -116,9 +87,11 @@ $(document).ready(function(e) {
     // method to parse and display a message from the agent
     sock.onmessage = function(e) {
         var content = JSON.parse(e.data);
+
         // display agent message
-        
-        new_message(content.text, content.speaker, content.role);
+        if(content.purpose === "message") {
+            new_message(content.text, content.speaker, content.role);
+        }
     };
 });
 
@@ -145,7 +118,7 @@ function new_message(message, id, role) {
     // if buyer
     if(role == 'buyer') {
         username.className = "buyer";
-        username.style.fontSize = "24px";
+        username.style.fontSize = "20px";
         username.innerHTML = id;
         username.style.color = colors[id];
         text.className = "message buyer";
@@ -153,7 +126,7 @@ function new_message(message, id, role) {
     // if seller
     } else if(role == "seller") {
         username.className = "seller";
-        username.style.fontSize = "24px";
+        username.style.fontSize = "20px";
         username.innerHTML = id;
         username.style.color = colors[id];
         text.className = "message seller";

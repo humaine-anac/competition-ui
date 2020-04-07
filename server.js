@@ -74,9 +74,9 @@ sock.on('connection', function connection(client) {
       sock.broadcast(message);
 
       // set duration data
-      new_round.durations.round = parseInt(data.data.start);
-      new_round.durations.post = parseInt(data.data.end);
-      new_round.durations.warmUp = parseInt(data.data.pre);
+      new_round.durations.round = parseInt(sampleRound.durations.round);
+      new_round.durations.post = parseInt(sampleRound.durations.post);
+      new_round.durations.warmUp = parseInt(sampleRound.durations.warmUp);
       console.log(new_round);
       request.get(endpoints.utility_generator + "/generateUtility/seller", (error, res, body) => {
 
@@ -195,6 +195,7 @@ app.post(endpoints.input, function(req, res) {
   }
 
   // Send to broadcast method for displaying in UI
+  json_content.purpose = "message";
   sock.broadcast(json_content);
 
   // send 'ack'

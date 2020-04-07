@@ -19,9 +19,9 @@
     "ws": "^7.2.1"
   },
   "scripts": {
-    "server": "node server.js",
-    "start": "react-scripts start",
-    "dev": "npm run start & node server.js",
+    "server": "node server.js & node index.js",
+    "start": "PORT=3007 react-scripts start",
+    "dev": "npm run start & run server",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",

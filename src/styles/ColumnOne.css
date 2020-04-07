@@ -1,32 +1,26 @@
-.column {
-    float: left;
-    width: 33.3%;
-    height: 100%;
-}
-
 .avatar {
     width: 30%;
     height: 20%;
-    margin-top: 10%;
+    margin-top: 5%;
     margin-left: 10%;
     float: left;
-    border: 1px solid black;
+    overflow: hidden;
 }
 
 /* CHAT UI DESIGN */
 #chat-ui {
     width: 90%;
     height: 30%;
-    margin-left: 5%;
-    margin-top: 5%;
+    max-height: 300px;
+    overflow: auto;
+    margin: auto;
+    margin-top: 8%;
     float: left;
-    border: 1px solid black;
+    overflow: hidden;
 }
 
-
 #message-display {
-    background-color: white;
-    width: 99%;
+    width: 98%;
     height: 89%;
     margin-left: 1%;
     margin-top: 1%;
@@ -35,14 +29,13 @@
 .message-space {
     width: 90%;
     margin-top: 20px;
-    margin: auto;
     min-height: 50px;
     height: auto;
     overflow: auto;
     display: block;
 }
 .message {
-    font-size: 18px;
+    font-size: var(--main-sub-text-font-size);
     padding: 2px;
     margin-top: 5px;
     min-width: 100px;
@@ -70,10 +63,10 @@
 
 /* OFFER DESIGN */
 #offer-ui {
-    width: 90%;
-    height: 30%;
-    margin-left: 5%;
-    margin-top: 5%;
+    width: 88%;
+    height: 25%;
+    margin: auto;
+    margin-top: 6%;
     float: left;
-    border: 1px solid black;
+    padding: 5px;
 }
