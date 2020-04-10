@@ -2,98 +2,114 @@
 const colors = {"Celia": "blue", "Watson": "green", "User": "red"};
 var quantities_set = 0;
 
-$(document).ready(function(e) {
+// client side server to connect to NodeJS server
+var sock = new WebSocket("ws://" + location.hostname + ":2501/");
 
-    function getSpeech() {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
+// Listen for the 'enter' key to be pressed, then process
+// the users input
+document.addEventListener('keydown', function(event) {
+    // check for enter, 'key 13'
+    if(event.keyCode == 13) {
 
-                var recorder = new MediaRecorder(stream);
-                recorder.start();
-                console.log(recorder.state);
-    
-                var chunks = [];
-    
-                recorder.addEventListener("dataavailable", event => {
-                    chunks.push(event.data);
-                });
-    
-                recorder.addEventListener("stop", () => {
-                    var blob = new Blob(chunks);
-                    var url= URL.createObjectURL(blob);
-                    var audio = new Audio(url);
+        // stop the enter key from writing into the textarea
+        event.preventDefault();
+        var message = document.querySelector("textarea[id='user-input-field']").value;
 
-                    console.log(audio);
-                });
-    
-                $("img").on("mouseleave", function() {
-                    $("#" + this.id).css("border","1px solid black");
-                    console.log(recorder.state);
-                    recorder.stop();
-                });
-        });
-    }
-    
-    // client side server to connect to NodeJS server
-    var sock = new WebSocket("ws://" + location.hostname + ":2501/");
-
-
-    // Listen for the 'enter' key to be pressed, then process
-    // the users input
-    document.addEventListener('keydown', function(event) {
-
-        // check for enter, 'key 13'
-        if(event.keyCode == 13) {
-
-            // stop the enter key from writing into the textarea
-            event.preventDefault();
-            var message = $("#user-input-field").val();
-
-            // If buyer message
-            if(message.length > 0) {
-
-                // display message
-                new_message(message, 'User', 'buyer');
-                // send node server the user message
-                var json = {purpose:"message", data:message, role:"buyer"};
-                sock.send(data=JSON.stringify(json));
-                $("#user-input-field").val('');
-            }
+        // If buyer message
+        if(message.length > 0) {
+            // display message
+            new_message(message, 'User', 'buyer');
+            // send node server the user message
+            var json = {purpose:"message", data:message, role:"buyer"};
+            sock.send(data=JSON.stringify(json));
+            document.querySelector("textarea[id='user-input-field']").value = '';
         }
-    });
-
-    // start round
-    $("#start").on("click", function(eve) {
-
-        // send to node server
-        var json = {purpose:"newRound"};
-        sock.send(data=JSON.stringify(json));
-    });
-
-    $("img").on("mouseenter", function() {
-        $("#" + this.id).css("border","1px solid red");
-
-        getSpeech();
-    });
-
-
-
-    // debug to print error object incase of bug
-    sock.onerror = function(e) {
-        console.log("WebSocket error: ", e);
     }
-
-
-    // method to parse and display a message from the agent
-    sock.onmessage = function(e) {
-        var content = JSON.parse(e.data);
-
-        // display agent message
-        if(content.purpose === "message") {
-            new_message(content.text, content.speaker, content.role);
-        }
-    };
 });
+
+// start round
+document.querySelector('button[id="start"]').addEventListener("click", function(eve) {
+    // get duration data
+    var round = 300;
+    var post = 60;
+    var warmup = 10;
+    var roundTimer = document.querySelector("div[id='roundTimer']");
+    var roundTimerHeader = document.querySelector("div[id='roundTimerHeader']");
+
+    // send to node server
+    var json = {purpose:"newRound"};
+    sock.send(data=JSON.stringify(json));
+
+    // WARMUP TIMER
+    roundTimerHeader.innerHTML = "Warmup Time:";
+    roundTimer.innerHTML = warmup;
+    var timer1 = setInterval(function(){
+        console.log("got here");
+        roundTimer.innerHTML -= 1;
+
+        if(roundTimer.innerHTML <= 0) {
+            clearInterval(timer1);
+
+            // ROUND TIMER
+            roundTimerHeader.innerHTML = "Negotiation Time:";
+            roundTimer.innerHTML = round;
+            var timer2 = setInterval(function() {
+                roundTimer.innerHTML -= 1;
+    
+                if(roundTimer.innerHTML <= 0) {
+                    clearInterval(timer2);
+
+
+                    // ALLOCATION TIMER
+                    roundTimerHeader.innerHTML = "Allocation Time:";
+                    roundTimer.innerHTML = post;
+                    var timer3 = setInterval(function() {
+                        roundTimer.innerHTML -= 1;
+
+                        if(roundTimer.innerHTML <= 0) {
+                            roundTimerHeader.innerHTML = "Post Round:";
+                            clearInterval(timer3);
+                        }
+                    }, 1000);
+
+                }
+            }, 1000);
+        }
+    }, 1000);
+});
+
+document.querySelectorAll('img').forEach(element => {
+    element.addEventListener("mouseenter", function() {
+        element.style.border = "1px solid red";
+
+        //getSpeech();
+    });
+});
+
+document.querySelectorAll('img').forEach(element => {
+    element.addEventListener("mouseleave", function() {
+        element.style.border = "1px solid black";
+    });
+});
+
+
+
+// debug to print error object incase of bug
+sock.onerror = function(e) {
+    console.log("WebSocket error: ", e);
+}
+
+
+// method to parse and display a message from the agent
+sock.onmessage = function(e) {
+    var content = JSON.parse(e.data);
+
+    // display agent message
+    if(content.purpose === "message") {
+        new_message(content.text, content.speaker, content.role);
+    }
+};
+
 
 
 /*
@@ -146,8 +162,8 @@ function new_message(message, id, role) {
     message_space.appendChild(text);
 
     // Add the container div to the display div
-    $("#message-display")[0].appendChild(message_space);
+    document.querySelector('div[id="message-display"]').appendChild(message_space);
 
     // scroll down to show the most recent messages.
-    $("#message-display").scrollTop($("#message-display")[0].scrollHeight);
+    document.querySelector('div[id="message-display"]').scrollTop = document.querySelector('div[id="message-display"]').scrollHeight;
 }

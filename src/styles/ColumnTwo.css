@@ -8,11 +8,9 @@ button {
 #what-i-can-make {
     position: relative;
     width: 90%;
-    min-height: 75%;
-    max-height: 75%;
+    height: 81%;
     margin: auto;
     margin-top: 5%;
-    padding: 1%;
     font-size: var(--main-sub-text-font-size);
     display: block;
     overflow: scroll;
@@ -21,4 +19,5 @@ button {
 #what-i-can-make-inner {
     overflow: scroll;
     position: absolute;
+    padding-left: 10%;
 }

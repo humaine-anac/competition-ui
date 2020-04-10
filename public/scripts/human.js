@@ -1,5 +1,4 @@
 const socket = new WebSocketClient();
-
 const ingredients = ["egg", "flour", "milk", "sugar", "chocolate", "vanilla", "blueberry"];
 
 let roundNumber = 0;
@@ -22,8 +21,6 @@ function updateOffer(data) {
 
 function acceptOffer(data) {
   const agent = data.agent;
-  const moneyElem = document.getElementById('money');
-  moneyElem.innerText = parseFloat(moneyElem.innerText) - data.cost;
   document.getElementById(`offer-${agent}-cost`).innerText = 0;
   for (const ingredient in data.ingredients) {
     document.getElementById(`offer-${agent}-${ingredient}`).innerText = 0;
@@ -51,30 +48,6 @@ function updateBid(data) {
   }
 }
 
-function startTimer(timer) {
-  const elem = document.getElementById(timer);
-  interval = setInterval(() => {
-    const newTime = parseInt(elem.textContent) - 1;
-    if (newTime >= 0) {
-      elem.textContent = newTime;
-    }
-
-    if (newTime <= 0) {
-      clearInterval(interval);
-      if (timer === 'warmup-time') {
-        startTimer('round-time');
-      }
-      else if (timer === 'round-time') {
-        document.getElementById('save-allocation').style.display = 'inline-block';
-        startTimer('post-time');
-      }
-      else if (timer === 'post-time') {
-        //document.getElementById('save-allocation').style.display = 'none';
-      }
-    }
-  }, 1000);
-}
-
 function setUtility(data) {
   const utility = data.utility;
   for (const food in utility) {
@@ -92,13 +65,6 @@ function startRound() {
     clearInterval(interval);
   }
 
-  document.getElementById('round-number').textContent = roundNumber;
-  document.getElementById('money').textContent = startingMoney;
-
-  document.getElementById('warmup-time').textContent = durations.warmUp;
-  document.getElementById('round-time').textContent = durations.round;
-  document.getElementById('post-time').textContent = durations.post;
-
   const ingredients = ['egg', 'flour', 'milk', 'sugar', 'chocolate', 'vanilla', 'blueberry'];
   for (const ingredient of ingredients) {
     document.getElementById(`${ingredient}-required`).textContent = 0;
@@ -108,7 +74,6 @@ function startRound() {
   }
 
   document.getElementById('save-allocation').style.display = 'none';
-  startTimer('warmup-time');
 }
 
 function setRoundMetadata(data) {
@@ -292,10 +257,6 @@ document.getElementById('save-allocation').addEventListener('click', () => {
   socket.send({type: 'saveAllocation', payload: constructCalculatePayload()});
 });
 
-socket.onerror = (err) => {
-    console.log(err);
-}
-
 socket.onmessage = (msg) => {
   console.log(msg);
   switch (msg.type) {
@@ -329,5 +290,5 @@ socket.onmessage = (msg) => {
       break;
   }
 };
-console.log(location.href.replace('http', 'ws'));
-socket.open(location.href.replace('http', 'ws'));
+
+socket.open("ws://" + location.hostname + ":7040/");

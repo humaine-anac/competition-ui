@@ -22,21 +22,16 @@ class ColumnOne extends Component {
                 alt="Celia"
             />
 
-            <div id="chat-ui" className="unifiedSchema">
-                <div id="message-display"></div>
-
-                <textarea id="user-input-field" placeholder="Start chatting as seller!"></textarea>
-            </div>
-
             <div id="offer-ui" className="unifiedSchema">
+                <div className="sectionHeaders tableHead">Current Offers</div>
                 <table id='table-offers'>
-                    <thead>
+                    <thead className="tableHead">
                         <tr>
                             <td colSpan='2'><h4>Watson</h4></td>
                             <td colSpan='2'><h4>Celia</h4></td>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="tableBody">
                         <tr id='cost-row'>
                             <td width='90px'>cost</td>
                             <td id='offer-watson-cost' width='50px'>0</td>
@@ -87,6 +82,14 @@ class ColumnOne extends Component {
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <div id="chat-ui" className="unifiedSchema">
+                <div className="sectionHeaders tableHead">Chat Menu</div>
+
+                <div id="message-display"></div>
+
+                <textarea id="user-input-field" placeholder="Start chatting as seller!"></textarea>
             </div>
         </div>
     );

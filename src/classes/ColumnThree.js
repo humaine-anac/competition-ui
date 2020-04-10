@@ -7,17 +7,17 @@ class ColumnThree extends Component {
     return (
         <div className="column">
 
-            <div id="help-menu" className="unifiedSchema">
-                <div id="slide-container">
-                </div>
-
-                <a className="selector" id="prev">&#10094;</a>
-                <a className="selector" id="next">&#10095;</a>
+            <div id="timercontainer" className="unifiedSchema">
+                <div id="roundTimerHeader">Pre Round:</div>
+                <div id="roundTimer">0</div>
             </div>
 
-            <div id="utility-ui" className="unifiedSchema">
+            <div id="have-need" className="unifiedSchema">
+
+                <div className="sectionHeaders tableHead" style={{paddingBottom: '4%'}}>Current Items</div>
+
                 <table id='ingredients'>
-                    <thead>
+                    <thead className="tableHead">
                         <tr>
                             <th style={{width: "90px"}}>ingredient</th>
                             <th style={{width: "50px"}}>required</th>
@@ -25,7 +25,7 @@ class ColumnThree extends Component {
                             <th style={{width: "50px"}}>need</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="tableBody">
                         <tr>
                             <td>egg</td>
                             <td id='egg-required'>0</td>
@@ -72,8 +72,11 @@ class ColumnThree extends Component {
                 </table>
             </div>
 
-            <div id="have-need" className="unifiedSchema">
-                <table>
+            <div id="utility-ui" className="unifiedSchema">
+
+                <div className="sectionHeaders tableHead" style={{paddingTop: '2%', paddingBottom: '1%'}}>Utility Menu</div>
+
+                <table className="tableBody">
                     <tbody>
                         <tr>
                             <td>Cake</td>

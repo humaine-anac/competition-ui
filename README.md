@@ -1,14 +1,10 @@
 # competition-ui
 
 ## How to Initiate:
-
 npm install
 
-# To open the webpage
+# To open the webpage and start both required node servers:
 npm start
-
-# To open the webpage and start the required servers
-npm run dev
 
 
 

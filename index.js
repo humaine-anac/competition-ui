@@ -1,4 +1,3 @@
-const path = require('path');
 const express = require('express');
 const WebSocketServer = require('ws').Server;
 const {setLogLevel, logExpression} = require('@cisl/zepto-logger');
@@ -21,23 +20,14 @@ setLogLevel(logLevel);
 
 const app = express();
 app.set('port', myPort);
-app.set('view engine', 'ejs');
-app.set('json spaces', 2);
-// We need to expressly set this for when we package the human-ui
-app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname, 'static')));
 
 const httpServer = createServer(app);
 const wsServer = new WebSocketServer({server: httpServer});
 
 const sockets = {};
 let humanUtilityFunction;
-
-app.get('/', (req, res) => {
-  res.render('index');
-});
 
 app.post('/receiveMessage', (req, res) => {
   logExpression('Inside /receiveMessage', 2);
@@ -146,7 +136,6 @@ function saveAllocation(data, socket) {
 }
 
 wsServer.on('connection', (socket) => {
-  logExpression('webserver connected', 2);
   if (!socket.uuid) {
     socket.uuid = uuidv4();
   }
