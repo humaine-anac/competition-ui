@@ -22,7 +22,7 @@
     "ws": "^7.2.1"
   },
   "scripts": {
-    "backend-start": "NODE_ENV=production node server.js & node index.js",
+    "backend-start": "NODE_ENV=production node chatServer.js & node humanServer.js",
     "start": "concurrently \"npm-run-all -p backend-start start-js\"",
     "start-js": "PORT=5700 react-scripts start",
     "build": "react-scripts build",

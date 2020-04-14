@@ -5,7 +5,6 @@ const request = require('request');
 const cors = require('cors');
 const WebSocketServer = require('ws').Server;
 const router = express.Router();
-const path = require('path');
 
 // JSON files
 const output_json = require('./data/output-gate-json.json');
@@ -55,15 +54,7 @@ sock.on('connection', function connection(client) {
 
     data = JSON.parse(info);
 
-    // clause for setting the ingredients display with the most current ingredients
-    if(data.purpose == "updateIngredients") {
-      request.get(endpoints.env_orch + "/viewTotals", (error, res, body) => {
-        var info = JSON.parse(body);
-        var message = {purpose: "updateIngredients", data: info};
-        sock.broadcast(message);
-      });
-    // If the start button was clicked
-    } else if(data.purpose == "newRound") {
+    if(data.purpose == "newRound") {
 
       // gather all utility data
       var new_round = sampleRound;
@@ -169,12 +160,6 @@ sock.on('connection', function connection(client) {
       });
     }
   });
-});
-
-
-// Display index.html on http://localhost:2500/
-app.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 
