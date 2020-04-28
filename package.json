@@ -1,8 +1,9 @@
 {
-  "name": "simple-reactjs-app",
+  "name": "competition-ui",
+  "Author": "Max Herman <leawoodmax@yahoo.com>",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://aditya-sridhar.github.io/simple-reactjs-app",
+  "homepage": "https://github.com/humaine-anac/competition-ui",
   "dependencies": {
     "@cisl/zepto-logger": "^1.1.0",
     "body-parser": "^1.19.0",

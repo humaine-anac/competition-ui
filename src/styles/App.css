@@ -10,7 +10,7 @@
     width: 33.3%;
     height: 100%;
     margin: auto;
-    overflow: scroll;
+    overflow: none;
 }
 
 .unifiedSchema {
@@ -20,7 +20,7 @@
 
 .sectionHeaders {
     width: 100%;
-    height: 5%;
+    height: 1rem;
     text-align: center;
     margin-bottom: 1%;
     padding-bottom: 3%;
@@ -37,6 +37,6 @@
 }
 
 :root {
-    --main-sub-text-font-size: 1em;
-    --main-title-text-font-size: 1.3em;
+    --main-sub-text-font-size: calc(0.4em + 0.4vw);
+    --main-title-text-font-size: calc(0.5em + 0.5vw);
   }

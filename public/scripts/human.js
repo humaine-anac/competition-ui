@@ -21,6 +21,8 @@ function updateOffer(data) {
 
 function acceptOffer(data) {
   const agent = data.agent;
+  const moneyElem = document.getElementById('money');
+  moneyElem.innerText = parseFloat(moneyElem.innerText) - data.cost;
   document.getElementById(`offer-${agent}-cost`).innerText = 0;
   for (const ingredient in data.ingredients) {
     document.getElementById(`offer-${agent}-${ingredient}`).innerText = 0;
@@ -65,15 +67,23 @@ function startRound() {
     clearInterval(interval);
   }
 
+  document.getElementById('money').textContent = startingMoney;
+  document.querySelector('input[name="cakes"]').value = 0;
+  document.getElementById('cake-additives').innerHTML = '';
+  document.querySelector('input[name="pancakes"]').value = 0;
+  document.getElementById('pancake-additives').innerHTML = '';
+  document.getElementById('offer-celia-cost').textContent = 0;
+  document.getElementById('offer-watson-cost').textContent = 0;
+
   const ingredients = ['egg', 'flour', 'milk', 'sugar', 'chocolate', 'vanilla', 'blueberry'];
   for (const ingredient of ingredients) {
     document.getElementById(`${ingredient}-required`).textContent = 0;
     document.getElementById(`${ingredient}-have`).textContent = 0;
     document.getElementById(`${ingredient}-need`).textContent = 0;
+    document.getElementById(`offer-celia-${ingredient}`).textContent = 0;
+    document.getElementById(`offer-watson-${ingredient}`).textContent = 0;
     document.getElementById(`${ingredient}-need`).classList.remove('sufficient', 'insufficient');
   }
-
-  //document.getElementById('save-allocation').style.display = 'none';
 }
 
 function setRoundMetadata(data) {
@@ -132,15 +142,16 @@ document.querySelector('input[name="cakes"]').addEventListener('change', (event)
   else if (value > old) {
     for (let i = (old + 1); i <= value; i++) {
       const elem = document.createElement('tr');
+      elem.className = 'allocationElem';
       elem.innerHTML = `
 <td colspan="2">
   <h4>Cake ${i} Additives</h4>
-  <table>
-      <tr>
+  <table style="margin-left: 0;">
+      <tr style="display: inline-block; width: 100px;">
           <td>Chocolate (oz)</td>
           <td><input type="number" name="cakes-${i}-chocolate" value="0" min="0" /></td>
       </tr>
-      <tr>
+      <tr style="display: inline-block; width: 100px;">
           <td>Vanilla (tsp)</td>
           <td><input type="number" name="cakes-${i}-vanilla" value="0" min="0" /></td>
       </tr>
@@ -164,15 +175,16 @@ document.querySelector('input[name="pancakes"]').addEventListener('change', (eve
   else if (value > old) {
     for (let i = (old + 1); i <= value; i++) {
       const elem = document.createElement('tr');
+      elem.className = 'allocationElem';
       elem.innerHTML = `
 <td colspan="2">
   <h4>Pancake ${i} Additives</h4>
-  <table>
-    <tr>
+  <table style="margin-left: 0;">
+    <tr style="display: inline-block; width: 100px;">
       <td>Chocolate (oz)</td>
       <td><input type="number" name="pancakes-${i}-chocolate" value="0" min="0" /></td>
     </tr>
-    <tr>
+    <tr style="display: inline-block; width: 100px;">
       <td>blueberry (packet)</td>
       <td><input type="number" name="pancakes-${i}-blueberry" value="0" min="0" /></td>
     </tr>
@@ -250,11 +262,16 @@ function constructCalculatePayload() {
 }
 
 document.getElementById('calculate-utility').addEventListener('click', () => {
+  console.log("boom");
   socket.send({type: 'checkAllocation', payload: constructCalculatePayload()});
 });
 
 document.getElementById('save-allocation').addEventListener('click', () => {
   socket.send({type: 'saveAllocation', payload: constructCalculatePayload()});
+});
+
+document.getElementById('reset-menu').addEventListener('click', () => {
+  startRound();
 });
 
 socket.onmessage = (msg) => {

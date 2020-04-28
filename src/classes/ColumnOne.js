@@ -1,26 +1,17 @@
 import React, { Component } from 'react';
 import '../styles/ColumnOne.css';
-import watson_image from '../assets/watson_image.png';
-import celia_image from '../assets/celia_image.png';
 
 class ColumnOne extends Component {
   render() {
     return (
         <div className="column">
-            <img
-                id="watsonIcon"
-                src={watson_image}
-                className="avatar"
-                style={{backgroundColor: "white", backgroundSize: "cover", backgroundPosition: "center"}}
-                alt="Watson"
-            />
-            <img
-                id="celiaIcon"
-                src={celia_image}
-                className="avatar"
-                style={{backgroundSize: "cover", backgroundPosition: "center"}}
-                alt="Celia"
-            />
+
+            <div id="timercontainer" className="unifiedSchema">
+                <div id="roundTimerHeader" className="systemHeader">Pre Round:</div>
+                <div id="roundTimer">0</div>
+                <div className="systemHeader">Money: </div>
+                <div id='money'>0</div>
+            </div>
 
             <div id="offer-ui" className="unifiedSchema">
                 <div className="sectionHeaders tableHead">Current Offers</div>
@@ -84,12 +75,121 @@ class ColumnOne extends Component {
                 </table>
             </div>
 
-            <div id="chat-ui" className="unifiedSchema">
-                <div className="sectionHeaders tableHead">Chat Menu</div>
+            <div id="utility-ui" className="unifiedSchema">
 
-                <div id="message-display"></div>
+                <div className="sectionHeaders tableHead" style={{paddingTop: '2%', paddingBottom: '1%'}}>Baked Good Utilities</div>
 
-                <textarea id="user-input-field" placeholder="Start chatting as seller!"></textarea>
+                <table className="tableBody" style={{borderSpacing: "3px 0px"}}>
+                    <tbody>
+                        <tr>
+                            <td>Cake</td>
+                            <td id='utility-cake-value'></td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">
+                                <strong>Additives</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">
+                                <table className='utility-supplements'>
+                                    <tbody>
+                                        <tr>
+                                            <td>Chocolate</td>
+                                            <td>
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Quantity</td>
+                                                            <td id='utility-cake-chocolate-quantity'></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Value</td>
+                                                            <td id='utility-cake-chocolate-value'></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vanilla</td>
+                                            <td>
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Quantity</td>
+                                                            <td id='utility-cake-vanilla-quantity'></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Value</td>
+                                                            <td id='utility-cake-vanilla-value'></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table className="tableBody" style={{borderSpacing: "3px 0px"}}>
+                    <tbody>
+                        <tr>
+                            <td>Pancake</td>
+                            <td id='utility-pancake-value'></td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">
+                                <strong>Additives</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">
+                                <table className='utility-supplements'>
+                                    <tbody>
+                                        <tr>
+                                            <td>Chocolate</td>
+                                            <td>
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Quantity</td>
+                                                            <td id='utility-pancake-chocolate-quantity'></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Value</td>
+                                                            <td id='utility-pancake-chocolate-value'></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Blueberry</td>
+                                            <td>
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Quantity</td>
+                                                            <td id='utility-pancake-blueberry-quantity'></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Value</td>
+                                                            <td id='utility-pancake-blueberry-value'></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     );

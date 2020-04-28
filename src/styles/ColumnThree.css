@@ -1,42 +1,47 @@
-#roundTimer {
-    float: left;
-    top: 30px;
-    right: 50px;
-    color: black;
-    font-size: var(--main-title-text-font-size);
-    margin-left: 2%;
-    margin-top: 6%;
-}
-
-#timercontainer {
-    width: 75%;
-    height: 8%;
-    margin: auto;
-    margin-top: 5%;
-}
-
-#roundTimerHeader {
-    float: left;
-    top: 30px;
-    right: 50px;
-    color: black;
-    font-size: var(--main-title-text-font-size);
-    margin-left: 10%;
-    margin-top: 6%;
-}
-
 #have-need {
     width: 75%;
-    height: 25%;
+    height: 30%;
     margin: auto;
     margin-top: 5%;
     overflow: scroll;
 }
 
-#utility-ui {
+#what-i-can-make {
+    position: relative;
     width: 75%;
-    height: 47%;
+    height: 57%;
     margin: auto;
-    margin-top: 6%;
-    overflow: scroll;
+    margin-top: 5%;
+    font-size: var(--main-sub-text-font-size);
+    display: block;
+    overflow: hidden;
+}
+
+#what-i-can-make-inner {
+    position: relative;
+    overflow: auto; 
+    position: absolute;
+    padding-left: 10%;
+    height: 80%;
+    width: 90%;
+}
+
+button {
+    width: 15%;
+    height: 5%;
+    margin-top: 5%;
+    margin-left: 8%;
+    margin-bottom: 2%;
+    background-color: #BBCEDE;
+    border: 1px solid #DDA448;
+}
+
+.allocationBody {
+    width: 140%;
+    max-width: 450px;
+}
+
+.allocationElem {
+    font-size: var(--main-sub-text-font-size);;
+    width: 45%;
 }

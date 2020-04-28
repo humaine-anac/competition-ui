@@ -7,11 +7,6 @@ class ColumnThree extends Component {
     return (
         <div className="column">
 
-            <div id="timercontainer" className="unifiedSchema">
-                <div id="roundTimerHeader">Pre Round:</div>
-                <div id="roundTimer">0</div>
-            </div>
-
             <div id="have-need" className="unifiedSchema">
 
                 <div className="sectionHeaders tableHead" style={{paddingBottom: '4%'}}>Current Items</div>
@@ -72,122 +67,59 @@ class ColumnThree extends Component {
                 </table>
             </div>
 
-            <div id="utility-ui" className="unifiedSchema">
+            <div id="what-i-can-make" className="unifiedSchema">
 
-                <div className="sectionHeaders tableHead" style={{paddingTop: '2%', paddingBottom: '1%'}}>Utility Menu</div>
+                <div className="sectionHeaders tableHead">Allocation Manager</div>
 
-                <table className="tableBody">
-                    <tbody>
-                        <tr>
-                            <td>Cake</td>
-                            <td id='utility-cake-value'></td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <strong>Additives</strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <table className='utility-supplements'>
-                                    <tbody>
-                                        <tr>
-                                            <td>Chocolate</td>
-                                            <td>
-                                                <table>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Quantity</td>
-                                                            <td id='utility-cake-chocolate-quantity'></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Value</td>
-                                                            <td id='utility-cake-chocolate-value'></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Vanilla</td>
-                                            <td>
-                                                <table>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Quantity</td>
-                                                            <td id='utility-cake-vanilla-quantity'></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Value</td>
-                                                            <td id='utility-cake-vanilla-value'></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <button id="start">Start</button>
+                <button id="calculate-utility">Check</button>
+                <button id="save-allocation">Submit</button>
+                <button id="reset-menu">Reset</button>
 
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>Pancake</td>
-                            <td id='utility-pancake-value'></td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <strong>Additives</strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <table className='utility-supplements'>
-                                    <tbody>
-                                        <tr>
-                                            <td>Chocolate</td>
-                                            <td>
-                                                <table>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Quantity</td>
-                                                            <td id='utility-pancake-chocolate-quantity'></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Value</td>
-                                                            <td id='utility-pancake-chocolate-value'></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Blueberry</td>
-                                            <td>
-                                                <table>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Quantity</td>
-                                                            <td id='utility-pancake-blueberry-quantity'></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Value</td>
-                                                            <td id='utility-pancake-blueberry-value'></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div id="what-i-can-make-inner">
+
+                    <div style={{marginTop: "3px", marginBottom: "3px"}}>
+                        Potential Score: <span id='potential-score'>0</span>
+                    </div>
+
+
+                    <h3 className="tableHead">Cakes</h3>
+                    <div>
+                        1 Cake = 2 eggs + 2 flour + 1 milk + 1 sugar
+                    </div>
+                    <div>
+                        <table>
+                            <tbody className="tableBody">
+                                <tr>
+                                    <td>Number</td>
+                                    <td><input type="number" name="cakes" defaultValue="0" min="0" /></td>
+                                </tr>
+                            </tbody>
+                            <tbody id='cake-additives' className="allocationBody">
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <h3 className="tableHead">Pancakes</h3>
+                    <div>
+                        1 Pancake = 1 egg + 2 flour + 2 milk
+                    </div>
+                    <div>
+                        <table>
+                            <tbody className="tableBody">
+                                <tr>
+                                    <td>Number</td>
+                                    <td><input type="number" name="pancakes" defaultValue="0" min="0" /></td>
+                                </tr>
+                            </tbody>
+                            <tbody id='pancake-additives' className="allocationBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
         </div>
     );
   }

@@ -1,6 +1,7 @@
 // Global Variables
 const colors = {"Celia": "blue", "Watson": "green", "User": "red"};
 var quantities_set = 0;
+var timer1, timer2, timer3;
 
 // client side server to connect to NodeJS server
 var sock;
@@ -31,40 +32,79 @@ document.addEventListener('keydown', function(event) {
 
 // start round
 document.querySelector('button[id="start"]').addEventListener("click", function(eve) {
+
+    // send to node server
+    var json = {purpose:"newRound"};
+    sock.send(data=JSON.stringify(json));
+    runTimer("start");
+});
+
+function runTimer(type) {
+    
     // get duration data
     var round = 300;
     var post = 60;
     var warmup = 10;
     var roundTimer = document.querySelector("div[id='roundTimer']");
     var roundTimerHeader = document.querySelector("div[id='roundTimerHeader']");
+    var timeLeft = sessionStorage.getItem('roundTimer');
+    
+    clearInterval(timer1);
+    clearInterval(timer2);
+    clearInterval(timer3);
 
-    // send to node server
-    var json = {purpose:"newRound"};
-    sock.send(data=JSON.stringify(json));
+    if(type == "stop") return;
+
+    roundTimerHeader.innerHTML = sessionStorage.getItem('roundTimerHeader');
 
     // WARMUP TIMER
-    roundTimerHeader.innerHTML = "Warmup Time:";
+    if(type == "start")
+        roundTimerHeader.innerHTML = "Warmup Time:";
     roundTimer.innerHTML = warmup;
-    var timer1 = setInterval(function(){
+    if(type == "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
+    timer1 = setInterval(function(){
+
+        // check for restarting round
+        if(roundTimerHeader.innerHTML != "Warmup Time:") {
+            clearInterval(timer1);
+            roundTimer.innerHTML = 0;
+        }
+
+        // decrement the timer
         roundTimer.innerHTML -= 1;
 
+        // if timer has run out, move to the next stage
         if(roundTimer.innerHTML <= 0) {
             clearInterval(timer1);
 
             // ROUND TIMER
-            roundTimerHeader.innerHTML = "Negotiation Time:";
+            if(type == "start")
+                roundTimerHeader.innerHTML = "Negotiation Time:";
             roundTimer.innerHTML = round;
-            var timer2 = setInterval(function() {
+            if(type == "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
+            timer2 = setInterval(function() {
+
+                if(roundTimerHeader.innerHTML != "Negotiation Time:") {
+                    clearInterval(timer2);
+                    roundTimer.innerHTML = 0;
+                }
                 roundTimer.innerHTML -= 1;
     
                 if(roundTimer.innerHTML <= 0) {
                     clearInterval(timer2);
 
-
                     // ALLOCATION TIMER
-                    roundTimerHeader.innerHTML = "Allocation Time:";
+                    if(type == "start")
+                        roundTimerHeader.innerHTML = "Allocation Time:";
                     roundTimer.innerHTML = post;
-                    var timer3 = setInterval(function() {
+                    if(type == "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
+                    timer3 = setInterval(function() {
+
+                        if(roundTimerHeader.innerHTML != "Allocation Time:") {
+                            clearInterval(timer3);
+                            roundTimer.innerHTML = 0;
+                        }
+
                         roundTimer.innerHTML -= 1;
 
                         if(roundTimer.innerHTML <= 0) {
@@ -77,22 +117,9 @@ document.querySelector('button[id="start"]').addEventListener("click", function(
             }, 1000);
         }
     }, 1000);
-});
+}
 
-document.querySelectorAll('img').forEach(element => {
-    element.addEventListener("mouseenter", function() {
-        element.style.border = "1px solid red";
-
-        //getSpeech();
-    });
-});
-
-document.querySelectorAll('img').forEach(element => {
-    element.addEventListener("mouseleave", function() {
-        element.style.border = "1px solid black";
-    });
-});
-
+// Helper method used to initiate a websocket connection with the corresponding node server
 function connect() {
     sock = new WebSocket("ws://" + location.hostname + ":2501/");
 
@@ -101,6 +128,15 @@ function connect() {
         console.log("WebSocket error: ", e);
         reconnect();
     }
+
+    if(refresh)
+        clearInterval(refresh)
+    
+    var refresh = setInterval(() => {
+        sessionStorage.setItem('backup', document.body.outerHTML);
+        sessionStorage.setItem('roundTimer', document.querySelector("div[id='roundTimer']").innerHTML);
+        sessionStorage.setItem('roundTimerHeader', document.querySelector("div[id='roundTimerHeader']").innerHTML);
+    }, 2000);
 
 
     // method to parse and display a message from the agent
@@ -114,12 +150,44 @@ function connect() {
     };
 }
 
+
+// If the above method cannot connect, then retry after 5 seconds
 function reconnect() {
     setTimeout(() => {
         connect();
     }, 5000);
 }
 
+
+window.onload = function(e) {
+    setTimeout(() => {
+        console.log("refreshed");
+        if(sessionStorage.getItem('backup') !== "") {
+            var doc = document.createElement("body");
+            doc.innerHTML = sessionStorage.getItem('backup');
+            
+
+            this.document.querySelector('div[id="timercontainer"]').innerHTML = doc.querySelector('div[id="timercontainer"]').innerHTML;
+            this.document.querySelector('div[id="offer-ui"]').innerHTML = doc.querySelector('div[id="offer-ui"]').innerHTML;
+            this.document.querySelector('div[id="utility-ui"]').innerHTML = doc.querySelector('div[id="utility-ui"]').innerHTML;
+            this.document.querySelector('div[id="message-display"]').innerHTML = doc.querySelector('div[id="message-display"]').innerHTML;
+            this.document.querySelector('div[id="have-need"]').innerHTML = doc.querySelector('div[id="have-need"]').innerHTML;
+            this.document.querySelector('tbody[id="cake-additives"]').innerHTML = doc.querySelector('tbody[id="cake-additives"]').innerHTML;
+            this.document.querySelector('tbody[id="pancake-additives"]').innerHTML = doc.querySelector('tbody[id="pancake-additives"]').innerHTML;
+        }
+
+        runTimer("restart");
+    }, 500);
+}
+
+
+document.getElementById('reset-menu').addEventListener('click', () => {
+    document.getElementById('message-display').innerHTML = '';
+    document.querySelector("div[id='roundTimerHeader']").innerHTML = "Pre Round:";
+    document.querySelector("div[id='roundTimer']").innerHTML = 0;
+    runTimer("stop");
+    sessionStorage.setItem('backup', document.getElementById('root').innerHTML);
+});
 
 
 /*

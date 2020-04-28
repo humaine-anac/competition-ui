@@ -1,23 +1,54 @@
-button {
-    width: 20%;
-    height: 5%;
-    margin-top: 5%;
-    margin-left: 10%;
-}
-
-#what-i-can-make {
-    position: relative;
-    width: 90%;
-    height: 81%;
+/* CHAT UI DESIGN */
+#chat-ui {
+    width: 88%;
+    height: 91.5%;
     margin: auto;
     margin-top: 5%;
-    font-size: var(--main-sub-text-font-size);
-    display: block;
-    overflow: scroll;
+    overflow: hidden;
+    position: relative;
+    overflow: hidden;
 }
 
-#what-i-can-make-inner {
-    overflow: scroll;
+#message-display {
+    width: 100%;
+    height: 88%;
+    padding-left: 5%;
     position: absolute;
-    padding-left: 10%;
+    overflow: auto;
+}
+.message-space {
+    width: 90%;
+    margin-top: 20px;
+    min-height: 50px;
+    height: auto;
+    overflow: auto;
+    display: block;
+}
+.message {
+    font-size: var(--main-sub-text-font-size);
+    padding: 2px;
+    margin-top: 5px;
+    min-width: 100px;
+    max-width: 500px;
+}
+#user-input-field {
+    background-color: rgb(235, 235, 235);
+    width: 100%;
+    font-size: 18px;
+    height: 5%;
+    text-decoration: none;
+    outline: none;
+    resize: none;
+    position: absolute;
+    bottom: 0;
+}
+
+.seller {
+    float: left;
+    clear: left;
+}
+.buyer {
+    float: right;
+    clear: right;
+    text-align: right;
 }

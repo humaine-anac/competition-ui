@@ -1,12 +1,4 @@
-/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
-/* Document
-   ========================================================================== */
-
-/**
- * 1. Correct the line height in all browsers.
- * 2. Prevent adjustments of font size after orientation changes in iOS.
- */
 
  html {
     height: 100%;
@@ -15,12 +7,6 @@
     -webkit-text-size-adjust: 100%; /* 2 */
   }
 
-  /* Sections
-     ========================================================================== */
-
-  /**
-   * Remove the margin in all browsers.
-   */
 
   body {
     height: 100%;
@@ -169,16 +155,7 @@
    * 2. Remove the margin in Firefox and Safari.
    */
 
-  button,
-  input,
-  optgroup,
-  select,
-  textarea {
-    font-family: inherit; /* 1 */
-    font-size: 100%; /* 1 */
-    line-height: 1.15; /* 1 */
-    margin: 0; /* 2 */
-  }
+  
 
   /**
    * Show the overflow in IE.
@@ -269,6 +246,7 @@
   /**
    * Remove the default vertical scrollbar in IE 10+.
    */
+
 
   textarea {
     overflow: auto;
