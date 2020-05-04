@@ -2,6 +2,7 @@
 const colors = {"Celia": "blue", "Watson": "green", "User": "red"};
 var quantities_set = 0;
 var timer1, timer2, timer3;
+var started = false;
 
 // client side server to connect to NodeJS server
 var sock;
@@ -30,17 +31,21 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+
 // start round
 document.querySelector('button[id="start"]').addEventListener("click", function(eve) {
-
     // send to node server
     var json = {purpose:"newRound"};
     sock.send(data=JSON.stringify(json));
     runTimer("start");
+    started = true;
 });
 
+
 function runTimer(type) {
-    
+
+    if(started === false) return;
+
     // get duration data
     var round = 300;
     var post = 60;
@@ -119,6 +124,7 @@ function runTimer(type) {
     }, 1000);
 }
 
+
 // Helper method used to initiate a websocket connection with the corresponding node server
 function connect() {
     sock = new WebSocket("ws://" + location.hostname + ":2501/");
@@ -182,6 +188,7 @@ window.onload = function(e) {
 
 
 document.getElementById('reset-menu').addEventListener('click', () => {
+    started = false;
     document.getElementById('message-display').innerHTML = '';
     document.querySelector("div[id='roundTimerHeader']").innerHTML = "Pre Round:";
     document.querySelector("div[id='roundTimer']").innerHTML = 0;

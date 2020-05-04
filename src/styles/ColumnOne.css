@@ -54,7 +54,16 @@
     margin-top: 5%;
 }
 
+#have-need {
+    width: 75%;
+    height: 30%;
+    margin: auto;
+    margin-top: 5%;
+    overflow: scroll;
+}
+
 #utility-ui {
+
     width: 75%;
     height: 45%;
     margin: auto;
