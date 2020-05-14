@@ -1,7 +1,7 @@
 #what-i-can-make {
     position: relative;
     width: 75%;
-    height: 57%;
+    height: 91.5%;
     margin: auto;
     margin-top: 5%;
     font-size: var(--main-sub-text-font-size);
@@ -9,12 +9,40 @@
     overflow: hidden;
 }
 
+#graph-container {
+    height: 19%;
+    width: 100%;
+    margin-bottom: 5%;
+    display: none;
+}
+
+.graph {
+    font-size: var(--main-sub-text-font-size);
+    width: 45% !important;
+    height: 50% !important;
+    margin-left: 3%;
+    float: left;
+    position: relative;
+}
+
+.graph-info {
+    height: 12%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.axis-text {
+    font-size: 12px;
+    margin:10px;
+}
+
 #what-i-can-make-inner {
     position: relative;
     overflow: auto; 
     position: absolute;
-    padding-left: 10%;
-    height: 80%;
+    padding-left: 6%;
+    height: 63%;
     width: 90%;
 }
 
@@ -36,4 +64,9 @@ button {
 .allocationElem {
     font-size: var(--main-sub-text-font-size);;
     width: 45%;
+}
+
+.allocationColumn {
+    float: left;
+    width: 50%;
 }

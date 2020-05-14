@@ -12,8 +12,12 @@ webSocket.src = "./scripts/websocket.js";
 var human = document.createElement('script');
 human.src = "./scripts/human.js";
 
+var chartJS = document.createElement('script');
+chartJS.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js";
+
 document.body.appendChild(main);
 document.body.appendChild(webSocket);
 document.body.appendChild(human);
+document.body.appendChild(chartJS);
 
 ReactDOM.render(<App />, document.getElementById('root'));

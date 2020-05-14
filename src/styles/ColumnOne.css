@@ -63,7 +63,7 @@
 }
 
 #utility-ui {
-
+    display: none;
     width: 75%;
     height: 45%;
     margin: auto;

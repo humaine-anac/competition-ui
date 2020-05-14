@@ -37,14 +37,21 @@ document.querySelector('button[id="start"]').addEventListener("click", function(
     // send to node server
     var json = {purpose:"newRound"};
     sock.send(data=JSON.stringify(json));
-    runTimer("start");
     started = true;
+    runTimer("start");
 });
 
 
 function runTimer(type) {
 
-    if(started === false) return;
+    if(started === false) {
+        clearInterval(timer1);
+        clearInterval(timer2);
+        clearInterval(timer3);  
+        document.querySelector("div[id='roundTimerHeader']").innerHTML = "Pre Round:";
+        document.querySelector("div[id='roundTimer']").innerHTML = 0;
+        return;
+    }
 
     // get duration data
     var round = 300;
@@ -58,15 +65,13 @@ function runTimer(type) {
     clearInterval(timer2);
     clearInterval(timer3);
 
-    if(type == "stop") return;
-
     roundTimerHeader.innerHTML = sessionStorage.getItem('roundTimerHeader');
 
     // WARMUP TIMER
-    if(type == "start")
+    if(type === "start")
         roundTimerHeader.innerHTML = "Warmup Time:";
     roundTimer.innerHTML = warmup;
-    if(type == "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
+    if(type === "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
     timer1 = setInterval(function(){
 
         // check for restarting round
@@ -83,10 +88,10 @@ function runTimer(type) {
             clearInterval(timer1);
 
             // ROUND TIMER
-            if(type == "start")
+            if(type === "start")
                 roundTimerHeader.innerHTML = "Negotiation Time:";
             roundTimer.innerHTML = round;
-            if(type == "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
+            if(type === "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
             timer2 = setInterval(function() {
 
                 if(roundTimerHeader.innerHTML != "Negotiation Time:") {
@@ -99,10 +104,10 @@ function runTimer(type) {
                     clearInterval(timer2);
 
                     // ALLOCATION TIMER
-                    if(type == "start")
+                    if(type === "start")
                         roundTimerHeader.innerHTML = "Allocation Time:";
                     roundTimer.innerHTML = post;
-                    if(type == "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
+                    if(type === "restart" && timeLeft > 0) roundTimer.innerHTML = timeLeft;
                     timer3 = setInterval(function() {
 
                         if(roundTimerHeader.innerHTML != "Allocation Time:") {
@@ -142,6 +147,7 @@ function connect() {
         sessionStorage.setItem('backup', document.body.outerHTML);
         sessionStorage.setItem('roundTimer', document.querySelector("div[id='roundTimer']").innerHTML);
         sessionStorage.setItem('roundTimerHeader', document.querySelector("div[id='roundTimerHeader']").innerHTML);
+        sessionStorage.setItem('timerStarted', started);
     }, 2000);
 
 
@@ -165,14 +171,14 @@ function reconnect() {
 }
 
 
-window.onload = function(e) {
+window.addEventListener("load",function(event) {
     setTimeout(() => {
         console.log("refreshed");
         if(sessionStorage.getItem('backup') !== "") {
             var doc = document.createElement("body");
             doc.innerHTML = sessionStorage.getItem('backup');
-            
 
+            this.document.querySelector('div[id="graph-container"]').innerHTML = doc.querySelector('div[id="graph-container"]').innerHTML;
             this.document.querySelector('div[id="timercontainer"]').innerHTML = doc.querySelector('div[id="timercontainer"]').innerHTML;
             this.document.querySelector('div[id="offer-ui"]').innerHTML = doc.querySelector('div[id="offer-ui"]').innerHTML;
             this.document.querySelector('div[id="utility-ui"]').innerHTML = doc.querySelector('div[id="utility-ui"]').innerHTML;
@@ -180,18 +186,19 @@ window.onload = function(e) {
             this.document.querySelector('div[id="have-need"]').innerHTML = doc.querySelector('div[id="have-need"]').innerHTML;
             this.document.querySelector('tbody[id="cake-additives"]').innerHTML = doc.querySelector('tbody[id="cake-additives"]').innerHTML;
             this.document.querySelector('tbody[id="pancake-additives"]').innerHTML = doc.querySelector('tbody[id="pancake-additives"]').innerHTML;
+            started = this.sessionStorage.getItem('timerStarted');
+            console.log(started);
+            if(started === true) document.querySelector('div[id="graph-container"]').style.display = 'block';
+            else document.querySelector('div[id="graph-container"]').style.display = 'none';
         }
-
         runTimer("restart");
     }, 500);
-}
+}, false);
 
 
 document.getElementById('reset-menu').addEventListener('click', () => {
     started = false;
     document.getElementById('message-display').innerHTML = '';
-    document.querySelector("div[id='roundTimerHeader']").innerHTML = "Pre Round:";
-    document.querySelector("div[id='roundTimer']").innerHTML = 0;
     runTimer("stop");
     sessionStorage.setItem('backup', document.getElementById('root').innerHTML);
 });

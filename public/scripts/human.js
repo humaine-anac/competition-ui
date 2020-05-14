@@ -62,6 +62,112 @@ function setUtility(data) {
   }
 }
 
+
+
+function create_chart_data_points(base_cost, initial_increase_x, final_increase_x, initial_increase_y, final_increase_y) {
+    return [
+        {x: 0, y: base_cost},
+        {x: initial_increase_x, y: base_cost},
+        {x: initial_increase_x, y: base_cost + initial_increase_y},
+        {x: final_increase_x, y: base_cost + final_increase_y},
+        {x: final_increase_x + 4, y: base_cost + final_increase_y},
+    ]
+}
+
+function create_graph(data, food) {
+
+    const additives = data.parameters;
+
+    const choc = additives.supplement['chocolate'];
+    const vani = additives.supplement['vanilla'];
+    const berr = additives.supplement['blueberry'];
+
+    var data_choc = create_chart_data_points(additives.unitvalue || additives.unitcost,
+                                            choc.parameters.minQuantity, 
+                                            choc.parameters.maxQuantity, 
+                                            choc.parameters.minValue, 
+                                            choc.parameters.maxValue);
+    
+    var data_other;
+    var name_other;
+    if(vani !== undefined) {
+        name_other = 'vanilla';
+        data_other = create_chart_data_points(additives.unitvalue || additives.unitcost,
+                                            vani.parameters.minQuantity, 
+                                            vani.parameters.maxQuantity, 
+                                            vani.parameters.minValue, 
+                                            vani.parameters.maxValue);
+    } else {
+        name_other = 'blueberry';
+        data_other = create_chart_data_points(additives.unitvalue || additives.unitcost,
+                                            berr.parameters.minQuantity, 
+                                            berr.parameters.maxQuantity, 
+                                            berr.parameters.minValue, 
+                                            berr.parameters.maxValue);
+    }
+
+    document.querySelector('div[id="graph-container"]').style.display = 'block';
+
+    var scatterChart = new Chart(
+        document.getElementById(food + "_graph"), 
+        {
+            type: 'scatter',
+            data: {
+                datasets: [
+                {
+                    label: 'Chocolate',
+                    fill: false,
+                    borderColor: "#B22222",
+                    backgroundColor: "#B22222",
+                    pointBackgroundColor: "#B22222",
+                    pointBorderColor: "#B22222",
+                    lineTension: 0, 
+                    data: data_choc
+                },
+                {
+                    label: name_other,
+                    fill: false,
+                    borderColor: "#4682B4",
+                    backgroundColor: "#4682B4",
+                    pointBackgroundColor: "#4682B4",
+                    pointBorderColor: "#4682B4",
+                    lineTension: 0, 
+                    data: data_other
+                }
+            ]
+            },
+            showLine: true,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    position: 'top',
+                    display: true,
+                    text: food + " value per additive"
+                },
+                legend: {
+                    position: 'bottom',
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            color: '#888',
+                            drawOnChartArea: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            color: '#888',
+                            drawOnChartArea: false
+                        }
+                    }]
+                }
+            }
+        }
+    );
+}
+
+
 function startRound() {
   if (interval) {
     clearInterval(interval);
@@ -272,13 +378,29 @@ document.getElementById('save-allocation').addEventListener('click', () => {
 
 document.getElementById('reset-menu').addEventListener('click', () => {
   startRound();
+  additive_data = undefined;
 });
+
+window.addEventListener("load",function(event) {
+    setTimeout(() => {
+        additive_data = JSON.parse(sessionStorage.getItem('additive_data'));
+        console.log(additive_data);
+        if(additive_data !== undefined) {
+            create_graph(additive_data.utility['cake'], 'cake');
+            create_graph(additive_data.utility['pancake'], 'pancake');
+            console.log('ran');
+        }
+    }, 500);
+}, false);
 
 socket.onmessage = (msg) => {
   console.log(msg);
   switch (msg.type) {
     case 'setUtility':
-      setUtility(msg.payload);
+      console.log(msg.payload);
+      sessionStorage.setItem('additive_data', JSON.stringify(additive_data));
+      create_graph(msg.payload.utility['cake'], 'cake');
+      create_graph(msg.payload.utility['pancake'], 'pancake');
       break;
     case 'checkAllocationReturn':
       updateIngredientsNeeds(msg.payload.allocation);
