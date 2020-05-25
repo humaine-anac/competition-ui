@@ -7,10 +7,17 @@ class ColumnOne extends Component {
         <div className="column">
 
             <div id="timercontainer" className="unifiedSchema">
-                <div id="roundTimerHeader" className="systemHeader">Pre Round:</div>
-                <div id="roundTimer">0</div>
-                <div className="systemHeader">Money: </div>
-                <div id='money'>0</div>
+                <div id="roundDataMenu" style={{float: 'left', width: '60%'}}>
+                    <div id="roundTimerHeader" className="systemHeader">Pre Round:</div>
+                    <div id="roundTimer">0</div>
+                    <div className="systemHeader">Remaining Budget: </div>
+                    <div id='money'>0</div>
+                </div>
+
+                <div style={{float: 'left', width: '40%'}}>
+                    <button id="start" className="roundButton">Start</button>
+                    <button id="reset-menu" className="roundButton">Reset</button>
+                </div>
             </div>
 
             <div id="offer-ui" className="unifiedSchema">

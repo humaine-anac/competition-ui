@@ -10,19 +10,31 @@ class ColumnThree extends Component {
             <div id="what-i-can-make" className="unifiedSchema">
 
                 <div className="sectionHeaders tableHead">Allocation Manager</div>
-
-                <button id="start">Start</button>
-                <button id="calculate-utility">Check</button>
-                <button id="save-allocation">Submit</button>
-                <button id="reset-menu">Reset</button>
-
-                <div id="graph-container">
-                    <canvas id="cake_graph" className="graph"></canvas>
-                    <canvas id="pancake_graph" className="graph"></canvas>
+                <div>
+                    <button id="calculate-utility">Check</button>
+                    <button id="save-allocation">Submit</button>
+                    <div style={{marginTop: "7%", marginBottom: "3px", marginLeft: "8%", width: "30%", float: "left"}}>
+                        Potential Score: <span id='potential-score'>0</span>
+                    </div>
                 </div>
 
-                <div style={{marginTop: "3px", marginBottom: "3px", marginLeft: '30%'}}>
-                    Potential Score: <span id='potential-score'>0</span>
+                <div id="graph-container">
+                    <div className="graph-sub-container">
+                        <canvas id="cake_graph" className="graph"></canvas>
+                        <p className="x-axis-label">
+                            Quantity of Additives:<br/>
+                            <span style={{color: "#B22222"}}>Chocolate </span>
+                            <span style={{color: "#4682B4"}}>Vanilla</span>
+                        </p>
+                    </div>
+                    <div className="graph-sub-container">
+                        <canvas id="pancake_graph" className="graph"></canvas>
+                        <p className="x-axis-label">
+                            Quantity of Additives:<br/>
+                            <span style={{color: "#B22222"}}>Chocolate </span>
+                            <span style={{color: "#4682B4"}}>Blueberry</span>
+                        </p>
+                    </div>
                 </div>
 
                 <div id="what-i-can-make-inner">

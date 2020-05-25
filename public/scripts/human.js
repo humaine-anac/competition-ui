@@ -22,7 +22,7 @@ function updateOffer(data) {
 function acceptOffer(data) {
   const agent = data.agent;
   const moneyElem = document.getElementById('money');
-  moneyElem.innerText = parseFloat(moneyElem.innerText) - data.cost;
+  moneyElem.innerText = (parseFloat(moneyElem.innerText) - data.cost).toFixed(2);
   document.getElementById(`offer-${agent}-cost`).innerText = 0;
   for (const ingredient in data.ingredients) {
     document.getElementById(`offer-${agent}-${ingredient}`).innerText = 0;
@@ -74,97 +74,136 @@ function create_chart_data_points(base_cost, initial_increase_x, final_increase_
     ]
 }
 
-function create_graph(data, food) {
+function create_graph(data) {
 
-    const additives = data.parameters;
+    const cake_additives = data['cake'].parameters;
+    const pancake_additives = data['pancake'].parameters;
 
-    const choc = additives.supplement['chocolate'];
-    const vani = additives.supplement['vanilla'];
-    const berr = additives.supplement['blueberry'];
+    const choc_cake = cake_additives.supplement['chocolate'];
+    const choc_pancake = pancake_additives.supplement['chocolate'];
+    const vani = cake_additives.supplement['vanilla'];
+    const berr = pancake_additives.supplement['blueberry'];
 
-    var data_choc = create_chart_data_points(additives.unitvalue || additives.unitcost,
-                                            choc.parameters.minQuantity, 
-                                            choc.parameters.maxQuantity, 
-                                            choc.parameters.minValue, 
-                                            choc.parameters.maxValue);
+    var data_choc_cake = create_chart_data_points(cake_additives.unitvalue || cake_additives.unitcost,
+        choc_cake.parameters.minQuantity, 
+        choc_cake.parameters.maxQuantity, 
+        choc_cake.parameters.minValue, 
+        choc_cake.parameters.maxValue);
     
-    var data_other;
-    var name_other;
-    if(vani !== undefined) {
-        name_other = 'vanilla';
-        data_other = create_chart_data_points(additives.unitvalue || additives.unitcost,
-                                            vani.parameters.minQuantity, 
-                                            vani.parameters.maxQuantity, 
-                                            vani.parameters.minValue, 
-                                            vani.parameters.maxValue);
-    } else {
-        name_other = 'blueberry';
-        data_other = create_chart_data_points(additives.unitvalue || additives.unitcost,
-                                            berr.parameters.minQuantity, 
-                                            berr.parameters.maxQuantity, 
-                                            berr.parameters.minValue, 
-                                            berr.parameters.maxValue);
-    }
+    var data_choc_pancake = create_chart_data_points(pancake_additives.unitvalue || pancake_additives.unitcost,
+        choc_pancake.parameters.minQuantity, 
+        choc_pancake.parameters.maxQuantity, 
+        choc_pancake.parameters.minValue, 
+        choc_pancake.parameters.maxValue);
+    
+    var data_vani = create_chart_data_points(cake_additives.unitvalue || cake_additives.unitcost,
+        vani.parameters.minQuantity, 
+        vani.parameters.maxQuantity, 
+        vani.parameters.minValue, 
+        vani.parameters.maxValue);
+
+    var data_berr = create_chart_data_points(pancake_additives.unitvalue || pancake_additives.unitcost,
+        berr.parameters.minQuantity, 
+        berr.parameters.maxQuantity, 
+        berr.parameters.minValue, 
+        berr.parameters.maxValue);
+
 
     document.querySelector('div[id="graph-container"]').style.display = 'block';
 
-    var scatterChart = new Chart(
-        document.getElementById(food + "_graph"), 
-        {
-            type: 'scatter',
-            data: {
-                datasets: [
-                {
-                    label: 'Chocolate',
-                    fill: false,
-                    borderColor: "#B22222",
-                    backgroundColor: "#B22222",
-                    pointBackgroundColor: "#B22222",
-                    pointBorderColor: "#B22222",
-                    lineTension: 0, 
-                    data: data_choc
+    var x_min = 0;
+
+    var x_max = Math.max(choc_cake.parameters.maxQuantity, choc_pancake.parameters.maxQuantity, 
+                         vani.parameters.maxQuantity, berr.parameters.maxQuantity);
+
+    var y_min = Math.min(cake_additives.unitvalue, 
+                         pancake_additives.unitvalue) - 2;
+    y_min -= y_min % 5;
+
+    var y_max = Math.round(Math.max(cake_additives.unitvalue, pancake_additives.unitvalue) + 
+                                    Math.max(choc_cake.parameters.maxValue, choc_pancake.parameters.maxValue,
+                                    vani.parameters.maxValue, berr.parameters.maxValue) + 2);
+    y_max = y_max - (y_max % 5) + 5;
+
+    for(food in data) {
+        var scatterChart = new Chart(
+            document.getElementById(food + "_graph"), 
+            {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                    {
+                        label: 'Chocolate',
+                        fill: false,
+                        borderColor: "#B22222",
+                        backgroundColor: "#B22222",
+                        pointBackgroundColor: "#B22222",
+                        pointBorderColor: "#B22222",
+                        lineTension: 0, 
+                        data: (food === 'cake' ? data_choc_cake : data_choc_pancake)
+                    },
+                    {
+                        label: (food === 'cake' ? 'Vanilla' : 'Blueberry'),
+                        fill: false,
+                        borderColor: "#4682B4",
+                        backgroundColor: "#4682B4",
+                        pointBackgroundColor: "#4682B4",
+                        pointBorderColor: "#4682B4",
+                        lineTension: 0, 
+                        data: (food === 'cake' ? data_vani : data_berr)
+                    }
+                ]
                 },
-                {
-                    label: name_other,
-                    fill: false,
-                    borderColor: "#4682B4",
-                    backgroundColor: "#4682B4",
-                    pointBackgroundColor: "#4682B4",
-                    pointBorderColor: "#4682B4",
-                    lineTension: 0, 
-                    data: data_other
-                }
-            ]
-            },
-            showLine: true,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    position: 'top',
-                    display: true,
-                    text: food + " value per additive"
-                },
-                legend: {
-                    position: 'bottom',
-                },
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            color: '#888',
-                            drawOnChartArea: false
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            color: '#888',
-                            drawOnChartArea: false
-                        }
-                    }]
+                showLine: true,
+                options: {
+                    hover: {mode: null},
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    title: {
+                        fontSize: 10,
+                        position: 'top',
+                        display: true,
+                        text: food + " value per additive"
+                    },
+                    legend: {
+                        display: false,
+                        position: 'bottom',
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                min: x_min,
+                                max: x_max + 4,
+                                maxTicksLimit: 4
+                            },
+                            gridLines: {
+                                color: '#888',
+                                drawOnChartArea: false
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                min: y_min,
+                                max: y_max,
+                                autoSkip: false,
+                                stepSize: 5,
+                                maxTicksLimit: 6
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 10,
+                                labelString: food + ' Value'
+                            },
+                            gridLines: {
+                                color: '#888',
+                                drawOnChartArea: false
+                            }
+                        }]
+                    }
                 }
             }
-        }
-    );
+        );
+    }
 }
 
 
@@ -253,13 +292,13 @@ document.querySelector('input[name="cakes"]').addEventListener('change', (event)
 <td colspan="2">
   <h4>Cake ${i} Additives</h4>
   <table style="margin-left: 0;">
-      <tr style="display: inline-block; width: 100px;">
+      <tr style="display: inline-block; width: 180px;">
           <td>Chocolate (oz)</td>
-          <td><input type="number" name="cakes-${i}-chocolate" value="0" min="0" /></td>
+          <td><input class="allocationInput" type="number" name="cakes-${i}-chocolate" value="0" min="0" /></td>
       </tr>
-      <tr style="display: inline-block; width: 100px;">
+      <tr style="display: inline-block; width: 180px;">
           <td>Vanilla (tsp)</td>
-          <td><input type="number" name="cakes-${i}-vanilla" value="0" min="0" /></td>
+          <td><input class="allocationInput" type="number" name="cakes-${i}-vanilla" value="0" min="0" /></td>
       </tr>
   </table>
 </td>
@@ -286,13 +325,13 @@ document.querySelector('input[name="pancakes"]').addEventListener('change', (eve
 <td colspan="2">
   <h4>Pancake ${i} Additives</h4>
   <table style="margin-left: 0;">
-    <tr style="display: inline-block; width: 100px;">
+    <tr style="display: inline-block; width: 180px;">
       <td>Chocolate (oz)</td>
-      <td><input type="number" name="pancakes-${i}-chocolate" value="0" min="0" /></td>
+      <td><input class="allocationInput" type="number" name="pancakes-${i}-chocolate" value="0" min="0" /></td>
     </tr>
-    <tr style="display: inline-block; width: 100px;">
+    <tr style="display: inline-block; width: 180px;">
       <td>blueberry (packet)</td>
-      <td><input type="number" name="pancakes-${i}-blueberry" value="0" min="0" /></td>
+      <td><input class="allocationInput" type="number" name="pancakes-${i}-blueberry" value="0" min="0" /></td>
     </tr>
   </table>
 </td>
@@ -300,6 +339,16 @@ document.querySelector('input[name="pancakes"]').addEventListener('change', (eve
       additives.appendChild(elem);
     }
   }
+});
+
+$('body').on('change', '.allocationInput', function() {
+    var self = this.parentElement.parentElement;
+
+    if(self.nextElementSibling) {
+        self.nextElementSibling.childNodes[3].childNodes[0].value = '0';
+    } else {
+        self.previousElementSibling.childNodes[3].childNodes[0].value = '0';
+    }
 });
 
 function constructCalculatePayload() {
@@ -378,17 +427,13 @@ document.getElementById('save-allocation').addEventListener('click', () => {
 
 document.getElementById('reset-menu').addEventListener('click', () => {
   startRound();
-  additive_data = undefined;
 });
 
 window.addEventListener("load",function(event) {
     setTimeout(() => {
-        additive_data = JSON.parse(sessionStorage.getItem('additive_data'));
-        console.log(additive_data);
-        if(additive_data !== undefined) {
-            create_graph(additive_data.utility['cake'], 'cake');
-            create_graph(additive_data.utility['pancake'], 'pancake');
-            console.log('ran');
+        additive_data = JSON.parse(sessionStorage.getItem('additive_data')) || null;
+        if(additive_data !== undefined && additive_data.utility !== undefined) {
+            create_graph(additive_data.utility);
         }
     }, 500);
 }, false);
@@ -399,8 +444,7 @@ socket.onmessage = (msg) => {
     case 'setUtility':
       console.log(msg.payload);
       sessionStorage.setItem('additive_data', JSON.stringify(additive_data));
-      create_graph(msg.payload.utility['cake'], 'cake');
-      create_graph(msg.payload.utility['pancake'], 'pancake');
+      create_graph(msg.payload.utility);
       break;
     case 'checkAllocationReturn':
       updateIngredientsNeeds(msg.payload.allocation);

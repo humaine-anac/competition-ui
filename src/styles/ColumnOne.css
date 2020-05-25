@@ -16,7 +16,7 @@
     color: black;
     font-size: var(--main-title-text-font-size);
     margin-left: 2%;
-    margin-top: 6%;
+    margin-top: 5%;
 }
 
 #money {
@@ -26,7 +26,7 @@
     color: black;
     font-size: var(--main-title-text-font-size);
     margin-left: 2%;
-    margin-top: 6%;
+    margin-top: 5%;
 }
 
 #timercontainer {
@@ -43,7 +43,7 @@
     color: black;
     font-size: var(--main-title-text-font-size);
     margin-left: 10%;
-    margin-top: 6%;
+    margin-top: 5%;
 }
 
 /* OFFER DESIGN */
@@ -69,4 +69,18 @@
     margin: auto;
     margin-top: 5%;
     overflow: none;
+}
+
+#roundButtonContainer {
+    width: 75%;
+    height: 8%;
+    margin: auto;
+    margin-top: 5%;
+}
+
+.roundButton {
+    float: none;
+    margin-left: 25%;
+    width: 50%;
+    height: 100%;
 }

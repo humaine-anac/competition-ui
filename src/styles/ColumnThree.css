@@ -12,17 +12,25 @@
 #graph-container {
     height: 19%;
     width: 100%;
+    margin-top: 16%;
     margin-bottom: 5%;
     display: none;
 }
 
+.graph-sub-container {
+    height: 100%;
+    width: 50%;
+    float: left;
+    display: block;
+}
+
 .graph {
     font-size: var(--main-sub-text-font-size);
-    width: 45% !important;
-    height: 50% !important;
-    margin-left: 3%;
-    float: left;
+    width: 80% !important;
+    height: 60% !important;
+    margin-left: 5%;
     position: relative;
+    display: block;
 }
 
 .graph-info {
@@ -32,28 +40,35 @@
     right: 0;
 }
 
+.x-axis-label {
+    position: relative;
+    margin: auto;
+    left: 20%;
+}
+
 .axis-text {
     font-size: 12px;
     margin:10px;
 }
 
 #what-i-can-make-inner {
-    position: relative;
-    overflow: auto; 
+    overflow: auto;
     position: absolute;
-    padding-left: 6%;
-    height: 63%;
+    padding-left: 10%;
+    margin-top: 17%;
+    height: 59%;
     width: 90%;
 }
 
 button {
-    width: 15%;
-    height: 5%;
+    width: 18%;
+    height: 38%;
     margin-top: 5%;
     margin-left: 8%;
     margin-bottom: 2%;
     background-color: #BBCEDE;
     border: 1px solid #DDA448;
+    float: left;
 }
 
 .allocationBody {

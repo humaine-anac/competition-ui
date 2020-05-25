@@ -3,6 +3,7 @@ const colors = {"Celia": "blue", "Watson": "green", "User": "red"};
 var quantities_set = 0;
 var timer1, timer2, timer3;
 var started = false;
+var canSendMessage = true;
 
 // client side server to connect to NodeJS server
 var sock;
@@ -20,13 +21,18 @@ document.addEventListener('keydown', function(event) {
         var message = document.querySelector("textarea[id='user-input-field']").value;
 
         // If buyer message
-        if(message.length > 0) {
+        if(message.length > 0 && canSendMessage === true) {
             // display message
             new_message(message, 'User', 'buyer');
             // send node server the user message
             var json = {purpose:"message", data:message, role:"buyer"};
             sock.send(data=JSON.stringify(json));
             document.querySelector("textarea[id='user-input-field']").value = '';
+
+            canSendMessage = false;
+            setTimeout(function() {
+                canSendMessage = true;
+            }, 5000);
         }
     }
 });
@@ -34,6 +40,7 @@ document.addEventListener('keydown', function(event) {
 
 // start round
 document.querySelector('button[id="start"]').addEventListener("click", function(eve) {
+    console.log("started");
     // send to node server
     var json = {purpose:"newRound"};
     sock.send(data=JSON.stringify(json));
@@ -45,9 +52,7 @@ document.querySelector('button[id="start"]').addEventListener("click", function(
 function runTimer(type) {
 
     if(started === false) {
-        clearInterval(timer1);
-        clearInterval(timer2);
-        clearInterval(timer3);  
+        console.log("triggered");
         document.querySelector("div[id='roundTimerHeader']").innerHTML = "Pre Round:";
         document.querySelector("div[id='roundTimer']").innerHTML = 0;
         return;
@@ -178,18 +183,19 @@ window.addEventListener("load",function(event) {
             var doc = document.createElement("body");
             doc.innerHTML = sessionStorage.getItem('backup');
 
-            this.document.querySelector('div[id="graph-container"]').innerHTML = doc.querySelector('div[id="graph-container"]').innerHTML;
-            this.document.querySelector('div[id="timercontainer"]').innerHTML = doc.querySelector('div[id="timercontainer"]').innerHTML;
+            this.document.querySelector('div[id="roundDataMenu"]').innerHTML = doc.querySelector('div[id="roundDataMenu"]').innerHTML;
             this.document.querySelector('div[id="offer-ui"]').innerHTML = doc.querySelector('div[id="offer-ui"]').innerHTML;
             this.document.querySelector('div[id="utility-ui"]').innerHTML = doc.querySelector('div[id="utility-ui"]').innerHTML;
             this.document.querySelector('div[id="message-display"]').innerHTML = doc.querySelector('div[id="message-display"]').innerHTML;
             this.document.querySelector('div[id="have-need"]').innerHTML = doc.querySelector('div[id="have-need"]').innerHTML;
             this.document.querySelector('tbody[id="cake-additives"]').innerHTML = doc.querySelector('tbody[id="cake-additives"]').innerHTML;
             this.document.querySelector('tbody[id="pancake-additives"]').innerHTML = doc.querySelector('tbody[id="pancake-additives"]').innerHTML;
-            started = this.sessionStorage.getItem('timerStarted');
+            this.started = this.sessionStorage.getItem('timerStarted');
             console.log(started);
-            if(started === true) document.querySelector('div[id="graph-container"]').style.display = 'block';
-            else document.querySelector('div[id="graph-container"]').style.display = 'none';
+            if(started === true) {
+                this.document.querySelector('div[id="graph-container"]').innerHTML = doc.querySelector('div[id="graph-container"]').innerHTML;
+                document.querySelector('div[id="graph-container"]').style.display = 'block';
+            } else document.querySelector('div[id="graph-container"]').style.display = 'none';
         }
         runTimer("restart");
     }, 500);
@@ -197,6 +203,7 @@ window.addEventListener("load",function(event) {
 
 
 document.getElementById('reset-menu').addEventListener('click', () => {
+    console.log("reset");
     started = false;
     document.getElementById('message-display').innerHTML = '';
     runTimer("stop");
