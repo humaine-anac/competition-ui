@@ -208,6 +208,8 @@ document.getElementById('reset-menu').addEventListener('click', () => {
     document.getElementById('message-display').innerHTML = '';
     runTimer("stop");
     sessionStorage.setItem('backup', document.getElementById('root').innerHTML);
+    document.querySelector("div[id='roundTimerHeader']").innerHTML = "Pre Round:";
+    document.querySelector("div[id='roundTimer']").innerHTML = 0;
 });
 
 

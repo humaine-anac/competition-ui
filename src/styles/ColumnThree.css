@@ -10,6 +10,7 @@
 }
 
 #graph-container {
+    position: relative;
     height: 19%;
     width: 100%;
     margin-top: 16%;
@@ -18,15 +19,17 @@
 }
 
 .graph-sub-container {
+    position: relative;
     height: 100%;
     width: 50%;
     float: left;
     display: block;
+    left: -8px;
 }
 
 .graph {
     font-size: var(--main-sub-text-font-size);
-    width: 80% !important;
+    width: 85% !important;
     height: 60% !important;
     margin-left: 5%;
     position: relative;
@@ -43,6 +46,7 @@
 .x-axis-label {
     position: relative;
     margin: auto;
+    bottom: 15px;
     left: 20%;
 }
 
@@ -51,12 +55,19 @@
     margin:10px;
 }
 
+.additiveTag {
+    font-size: 70%;
+    position: relative;
+    bottom: 65px;
+    right: -50%;
+}
+
 #what-i-can-make-inner {
     overflow: auto;
     position: absolute;
     padding-left: 10%;
-    margin-top: 17%;
-    height: 59%;
+    margin-top: 10%;
+    height: 62%;
     width: 90%;
 }
 
@@ -83,5 +94,6 @@ button {
 
 .allocationColumn {
     float: left;
-    width: 50%;
+    margin-left: 5%;
+    width: 45%;
 }

@@ -163,7 +163,7 @@ function create_graph(data) {
                         fontSize: 10,
                         position: 'top',
                         display: true,
-                        text: food + " value per additive"
+                        text: (food === 'cake' ? 'Cake' : 'Pancake') + ' Value'
                     },
                     legend: {
                         display: false,
@@ -175,6 +175,12 @@ function create_graph(data) {
                                 min: x_min,
                                 max: x_max + 4,
                                 maxTicksLimit: 4
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 10,
+                                padding: 0,
+                                labelString: "Quantity of Additives"
                             },
                             gridLines: {
                                 color: '#888',
@@ -188,11 +194,6 @@ function create_graph(data) {
                                 autoSkip: false,
                                 stepSize: 5,
                                 maxTicksLimit: 6
-                            },
-                            scaleLabel: {
-                                display: true,
-                                fontSize: 10,
-                                labelString: food + ' Value'
                             },
                             gridLines: {
                                 color: '#888',

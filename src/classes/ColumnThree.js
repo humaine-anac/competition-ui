@@ -13,7 +13,7 @@ class ColumnThree extends Component {
                 <div>
                     <button id="calculate-utility">Check</button>
                     <button id="save-allocation">Submit</button>
-                    <div style={{marginTop: "7%", marginBottom: "3px", marginLeft: "8%", width: "30%", float: "left"}}>
+                    <div style={{marginTop: "6%", marginBottom: "3px", marginLeft: "8%", width: "30%", float: "left"}}>
                         Potential Score: <span id='potential-score'>0</span>
                     </div>
                 </div>
@@ -21,19 +21,15 @@ class ColumnThree extends Component {
                 <div id="graph-container">
                     <div className="graph-sub-container">
                         <canvas id="cake_graph" className="graph"></canvas>
-                        <p className="x-axis-label">
-                            Quantity of Additives:<br/>
-                            <span style={{color: "#B22222"}}>Chocolate </span>
-                            <span style={{color: "#4682B4"}}>Vanilla</span>
-                        </p>
+
+                        <span className='additiveTag' style={{color: "#B22222"}}>Chocolate </span>
+                        <span className='additiveTag' style={{color: "#4682B4"}}>Vanilla</span>
                     </div>
-                    <div className="graph-sub-container">
+                    <div className="graph-sub-container" style={{left: '-20px'}}>
                         <canvas id="pancake_graph" className="graph"></canvas>
-                        <p className="x-axis-label">
-                            Quantity of Additives:<br/>
-                            <span style={{color: "#B22222"}}>Chocolate </span>
-                            <span style={{color: "#4682B4"}}>Blueberry</span>
-                        </p>
+
+                        <span className='additiveTag' style={{color: "#B22222"}}>Chocolate </span>
+                        <span className='additiveTag' style={{color: "#4682B4"}}>Blueberry</span>
                     </div>
                 </div>
 
@@ -61,7 +57,7 @@ class ColumnThree extends Component {
                     <div className="allocationColumn">
                         <h3 className="tableHead">Pancakes</h3>
                         <div>
-                            1 Pancake = 1 egg + 2 flour<br/>+ 2 milk
+                            1 Pancake = 1 egg +<br/>2 flour + 2 milk
                         </div>
                         <div>
                             <table>
