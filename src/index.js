@@ -2,22 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from "./classes/App"
 
-
-var main = document.createElement('script');
-main.src = "./scripts/chat_ui.js";
-
-var webSocket = document.createElement('script');
+const webSocket = document.createElement('script');
 webSocket.src = "./scripts/websocket.js";
 
-var human = document.createElement('script');
-human.src = "./scripts/human.js";
+const main = document.createElement('script');
+main.src = "./scripts/main.js";
+main.defer = true;
 
-var chartJS = document.createElement('script');
+const chartJS = document.createElement('script');
 chartJS.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js";
 
-document.body.appendChild(main);
 document.body.appendChild(webSocket);
-document.body.appendChild(human);
+document.body.appendChild(main);
 document.body.appendChild(chartJS);
 
 ReactDOM.render(<App />, document.getElementById('root'));

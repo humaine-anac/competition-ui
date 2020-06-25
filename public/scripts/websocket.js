@@ -5,7 +5,7 @@ class WebSocketClient {
       this.onopen = null;
       this.onmessage = null;
     }
-  
+
     open(url) {
       this.url = url;
       console.log(`WebSocket: connecting to ${this.url}`);
@@ -16,9 +16,9 @@ class WebSocketClient {
           this.onopen();
         }
       };
-  
+
       this.client.onmessage = (event) => {
-          console.log(event);
+        // console.log(event);
         this.number++;
         if (this.onmessage) {
           try {
@@ -29,7 +29,7 @@ class WebSocketClient {
           }
         }
       };
-  
+
       this.client.onclose = (event) => {
         switch (event.code) {
           case 1000:
@@ -41,7 +41,7 @@ class WebSocketClient {
         }
         //this.onclose(event);
       };
-  
+
       this.client.onerror = (error) => {
         switch(error.code) {
           case 'ECONNREFUSED':
@@ -54,18 +54,18 @@ class WebSocketClient {
         }
       };
     }
-  
+
     send(data) {
       this.client.send(JSON.stringify(data));
     }
-  
+
     removeClientListeners() {
       this.client.onopen = null;
       this.client.onmessage = null;
       this.client.onclose = null;
       this.client.onerror = null;
     }
-  
+
     reconnect() {
       console.log(`WebSocketClient: Retry in ${this.autoReconnectInterval}ms`);
       this.removeClientListeners();
@@ -75,4 +75,3 @@ class WebSocketClient {
       }, this.autoReconnectInterval);
     }
   }
-  

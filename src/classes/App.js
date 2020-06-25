@@ -6,7 +6,6 @@ import '../styles/App.css';
 import '../styles/human.css';
 
 class App extends Component {
-
     render() {
         return (
             <div id="table">
