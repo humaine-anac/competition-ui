@@ -72,6 +72,7 @@
 }
 
 button {
+    font-size: var(--main-sub-text-font-size);
     width: 18%;
     height: 38%;
     margin-top: 5%;
@@ -88,7 +89,7 @@ button {
 }
 
 .allocationElem {
-    font-size: var(--main-sub-text-font-size);;
+    font-size: var(--main-sub-text-font-size);
     width: 45%;
 }
 

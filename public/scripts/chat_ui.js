@@ -183,7 +183,6 @@ window.addEventListener("load",function(event) {
             var doc = document.createElement("body");
             doc.innerHTML = sessionStorage.getItem('backup');
 
-            this.document.querySelector('div[id="roundDataMenu"]').innerHTML = doc.querySelector('div[id="roundDataMenu"]').innerHTML;
             this.document.querySelector('div[id="offer-ui"]').innerHTML = doc.querySelector('div[id="offer-ui"]').innerHTML;
             this.document.querySelector('div[id="utility-ui"]').innerHTML = doc.querySelector('div[id="utility-ui"]').innerHTML;
             this.document.querySelector('div[id="message-display"]').innerHTML = doc.querySelector('div[id="message-display"]').innerHTML;
@@ -193,9 +192,12 @@ window.addEventListener("load",function(event) {
             this.started = this.sessionStorage.getItem('timerStarted');
             console.log(started);
             if(started === true) {
+                this.document.querySelector('div[id="roundDataMenu"]').innerHTML = doc.querySelector('div[id="roundDataMenu"]').innerHTML;
                 this.document.querySelector('div[id="graph-container"]').innerHTML = doc.querySelector('div[id="graph-container"]').innerHTML;
                 document.querySelector('div[id="graph-container"]').style.display = 'block';
-            } else document.querySelector('div[id="graph-container"]').style.display = 'none';
+            } else {
+                document.querySelector('div[id="graph-container"]').style.display = 'none';
+            }
         }
         runTimer("restart");
     }, 500);

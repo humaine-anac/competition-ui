@@ -13,7 +13,7 @@ class ColumnThree extends Component {
                 <div>
                     <button id="calculate-utility">Check</button>
                     <button id="save-allocation">Submit</button>
-                    <div style={{marginTop: "6%", marginBottom: "3px", marginLeft: "8%", width: "30%", float: "left"}}>
+                    <div style={{marginTop: "6%", marginBottom: "3px", marginLeft: "8%", width: "40%", float: "left"}}>
                         Potential Score: <span id='potential-score'>0</span>
                     </div>
                 </div>

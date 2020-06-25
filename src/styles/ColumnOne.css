@@ -32,6 +32,7 @@
 #timercontainer {
     width: 75%;
     height: 8%;
+    min-height: 70px;
     margin: auto;
     margin-top: 5%;
 }
@@ -52,6 +53,7 @@
     height: 30%;
     margin: auto;
     margin-top: 5%;
+    overflow: scroll;
 }
 
 #have-need {
@@ -83,4 +85,5 @@
     margin-left: 25%;
     width: 50%;
     height: 100%;
+    font-size: var(--main-sub-text-font-size);
 }
