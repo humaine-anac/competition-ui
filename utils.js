@@ -17,13 +17,13 @@ module.exports.postToService = async (service, route, data) => {
     throw new Error(`Unrecognized service: ${service}`)
   }
 
-  const service_url = constructUrl(appSettings.serviceMap[service]);
+  const serviceUrl = constructUrl(appSettings.serviceMap[service]);
 
   if (route[0] !== '/') {
     route = '/' + route;
   }
 
-  const res = await fetch(`${service_url}${route}`, {
+  const res = await fetch(`${serviceUrl}${route}`, {
     method: 'post',
     headers: {
       "Content-Type": "application/json"
@@ -31,12 +31,37 @@ module.exports.postToService = async (service, route, data) => {
     body: JSON.stringify(data)
   });
 
+  const body = await res.text();
   try {
-    return await res.json();
+    return JSON.parse(body);
   }
   catch (exc) {
     logExpression('Could not parse response', 2);
-    logExpression(await res.text(), 2);
+    logExpression(body, 2);
     throw exc;
   }
 };
+
+module.exports.getFromService = async (service, route) => {
+  logExpression(`get from ${service} on ${route}`, 2);
+  if (!appSettings.serviceMap[service]) {
+    throw new Error(`Unrecognized service: ${service}`);
+  }
+
+  const serviceUrl = constructUrl(appSettings.serviceMap[service]);
+
+  if (route[0] !== '/') {
+    route = '/' + route;
+  }
+
+  const res = await fetch(`${serviceUrl}${route}`);
+  const body = await res.text();
+  try {
+    return JSON.parse(body);
+  }
+  catch (exc) {
+    logExpression('Could not parse response', 2);
+    logExpression(body, 2);
+    throw exc;
+  }
+}
