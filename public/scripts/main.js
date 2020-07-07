@@ -26,8 +26,8 @@ const durations = {
 function updateOffer(data) {
   const agent = data.agent;
   document.getElementById(`offer-${agent}-cost`).innerText = data.cost;
-  for (const ingredient in data.ingredients) {
-    document.getElementById(`offer-${agent}-${ingredient}`).innerText = data.ingredients[ingredient];
+  for (const ingredient in ingredients) {
+    document.getElementById(`offer-${agent}-${ingredient}`).innerText = data.ingredients[ingredient] || 0;
   }
 }
 
@@ -231,6 +231,8 @@ function create_graph(data) {
 
 
 function startRound() {
+  document.getElementById('round-buttons').display = 'none';
+
   document.getElementById('money').textContent = startingMoney;
   document.querySelector('input[name="cakes"]').value = 0;
   document.getElementById('cake-additives').innerHTML = '';
