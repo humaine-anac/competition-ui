@@ -33,9 +33,10 @@
 }
 #user-input-field {
     background-color: rgb(235, 235, 235);
-    width: 100%;
+    width: 99%;
     font-size: 18px;
     height: 5%;
+    font-size: var(--main-title-text-font-size);
     text-decoration: none;
     outline: none;
     resize: none;
