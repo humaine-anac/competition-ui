@@ -7,6 +7,7 @@ let timer1;
 let timer2;
 let timer3;
 let started = false;
+let completed = false;
 let canSendMessage = true;
 
 let roundId = parseInt(window.location.hash.substring(1));
@@ -26,7 +27,7 @@ const durations = {
 function updateOffer(data) {
   const agent = data.agent;
   document.getElementById(`offer-${agent}-cost`).innerText = data.cost;
-  for (const ingredient in ingredients) {
+  for (const ingredient of ingredients) {
     document.getElementById(`offer-${agent}-${ingredient}`).innerText = data.ingredients[ingredient] || 0;
   }
 }
@@ -231,7 +232,7 @@ function create_graph(data) {
 
 
 function startRound() {
-  document.getElementById('round-buttons').display = 'none';
+  document.getElementById('round-buttons').style.display = 'none';
 
   document.getElementById('money').textContent = startingMoney;
   document.querySelector('input[name="cakes"]').value = 0;
@@ -568,6 +569,7 @@ function runTimer(type) {
             roundTimer.innerHTML -= 1;
 
             if(roundTimer.innerHTML <= 0) {
+              completed = true;
               window.close();
               roundTimerHeader.innerHTML = "Post Round:";
               clearInterval(timer3);
@@ -666,6 +668,8 @@ $('body').on('change', '.allocationInput', function() {
 
 socket.onmessage = (msg) => {
   if (msg.roundId !== roundId) {
+    console.log('invalid roundId');
+    console.log(msg);
     return;
   }
   console.log(msg);
@@ -679,10 +683,11 @@ socket.onmessage = (msg) => {
       document.getElementById('potential-score').innerText = msg.payload.utility.value || 0;
       break;
     case 'saveAllocationResult':
-      if (msg.accepted) {
-        // document.getElementById('score').textContent = msg.value;
+      if (msg.payload.accepted) {
+        document.getElementById('submitted-score').style.color = 'green';
+        document.getElementById('submitted-score').innerText = '✓';
       }
-      updateIngredientsNeeds(msg.payload);
+      updateIngredientsNeeds(msg.payload.allocation);
       break;
     case 'setRoundMetadata':
       setRoundMetadata(msg.payload);
@@ -694,3 +699,15 @@ socket.onmessage = (msg) => {
 };
 
 socket.open("ws://" + location.hostname + ":7040/");
+
+window.addEventListener('beforeunload', function (e) {
+  if (!completed) {
+    let c = confirm('Round still in progress. Are you sure you want to close the window?');
+    if (!c) {
+        // Cancel the event
+      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      // Chrome requires returnValue to be set
+      e.returnValue = '';
+    }
+  }
+});

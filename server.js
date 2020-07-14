@@ -122,6 +122,10 @@ app.post('/receiveRoundTotals', (req, res) => {
   res.send({'status': 'acknowledged'});
 })
 
+app.post('/receiveLog', (req, res) => {
+  res.json({'status': 'acknowledged'});
+});
+
 function checkAllocation(roundId, data, socket) {
   let promises = [];
   promises.push(postToService('utility-generator', '/checkAllocation', data));
@@ -139,43 +143,51 @@ function checkAllocation(roundId, data, socket) {
   });
 }
 
-function saveAllocation(roundId, data, socket) {
-  postToService('utility-generator', '/checkAllocation', data).then((result) => {
-    if (result.sufficient) {
-      const payload = {
-        currencyUnit: "USD",
-        utility: humanUtilityFunctions[roundId].utility,
-        bundle: {
-          products: data.allocation.products
-        }
-      };
+async function saveAllocation(roundId, data, socket) {
+  logExpression('in func saveAllocation', 1);
+  const result = await postToService('utility-generator', '/checkAllocation', data);
+  if (result.sufficient) {
+    logExpression('allocation is sufficient', 1);
+    const payload = {
+      currencyUnit: "USD",
+      utility: humanUtilityFunctions[roundId].utility,
+      bundle: {
+        products: data.allocation.products
+      }
+    };
 
-      console.log(JSON.stringify(payload, null, 2));
+    const promises = [];
+    promises.push(postToService('utility-generator', '/calculateUtility/human', payload));
+    console.log(JSON.stringify(payload.bundle.products, null, 2));
+    promises.push(postToService('environment-orchestrator', '/receiveHumanAllocation', {
+      roundId: roundId,
+      payload: payload.bundle.products
+    }));
 
-      postToService('utility-generator', '/calculateUtility/human', payload).then((result) => {
-        socket.send(JSON.stringify({
-          type: 'saveAllocationResult',
-          accepted: true,
-          value: result.value,
-          data: result
-        }));
-      });
-
-      postToService('environment-orchestrator', '/receiveHumanAllocation', {
-        roundId: roundId,
-        products: payload.bundle.products
-      }).then((result) => {
-        logExpression(result, 1);
-      });
-    }
-    else {
+    Promise.all(promises).then((calcResult) => {
+      logExpression('result of /receiveHumanAllocation');
+      logExpression(calcResult[1], 1);
       socket.send(JSON.stringify({
         type: 'saveAllocationResult',
-        accepted: false,
-        data: body
+        roundId,
+        payload: {
+          accepted: calcResult[1].status.toLowerCase() === 'acknowledged',
+          value: calcResult[0].value,
+          allocation: result
+        }
       }));
-    }
-  });
+    });
+  }
+  else {
+    socket.send(JSON.stringify({
+      type: 'saveAllocationResult',
+      roundId,
+      payload: {
+        accepted: false,
+        data: body,
+      }
+    }));
+  }
 }
 
 function chatMessage(roundId, data) {
@@ -201,7 +213,11 @@ function chatMessage(roundId, data) {
   }
 
   // HTTP post request to send user message.
-  postToService('environment-orchestrator', '/relayMessage', message).catch((err) => {
+  postToService('environment-orchestrator', '/relayMessage', message).then(() => {
+    //logExpression('/relayMessage responded', 1);
+  }).catch((err) => {
+    logExpression('Failed to hear from /relayMessage');
+    console.log(message);
     console.error(err);
   });
 }

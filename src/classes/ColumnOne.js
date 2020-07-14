@@ -14,9 +14,9 @@ class ColumnOne extends Component {
                     <div id='money'>0</div>
                 </div>
 
-                <div style={{float: 'left', width: '40%'}}>
+                <div id='round-buttons' style={{float: 'left', width: '40%'}}>
                     <button id="start" className="roundButton">Start</button>
-                    <button id="reset-menu" className="roundButton">Reset</button>
+                    <button id="reset-menu" className="roundButton" style={{display: 'none'}}>Reset</button>
                 </div>
             </div>
 

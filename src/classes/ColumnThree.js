@@ -10,11 +10,16 @@ class ColumnThree extends Component {
             <div id="what-i-can-make" className="unifiedSchema">
 
                 <div className="sectionHeaders tableHead">Allocation Manager</div>
-                <div>
+                <div style={{marginTop: '5%', marginBottom: '1%'}}>
                     <button id="calculate-utility">Check</button>
-                    <button id="save-allocation">Submit</button>
-                    <div style={{marginTop: "6%", marginBottom: "3px", marginLeft: "8%", width: "40%", float: "left"}}>
+                    <div style={{display: 'inline-block'}}>
                         Potential Score: <span id='potential-score'>0</span>
+                    </div>
+                </div>
+                <div>
+                    <button id="save-allocation">Submit</button>
+                    <div style={{display: 'inline-block'}}>
+                        Submitted Score: <span id='submitted-score' style={{color: 'red'}}>X</span>
                     </div>
                 </div>
 
@@ -70,7 +75,7 @@ class ColumnThree extends Component {
                                 <tbody id='pancake-additives' className="allocationBody">
                                 </tbody>
                             </table>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
             </div>
