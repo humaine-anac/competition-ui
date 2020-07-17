@@ -39,6 +39,7 @@ wsServer.broadcast = (data) => {
 
 const sockets = {};
 let humanUtilityFunctions = {};
+let openConfirms = {};
 
 app.post('/receiveMessage', (req, res) => {
   logExpression('Inside /receiveMessage', 2);
@@ -124,6 +125,31 @@ app.post('/receiveRoundTotals', (req, res) => {
 
 app.post('/receiveLog', (req, res) => {
   res.json({'status': 'acknowledged'});
+});
+
+app.post('/confirmAccept', (req, res) => {
+  req.body.confirmId = uuidv4();
+  wsServer.broadcast({
+    roundId: req.body.roundId,
+    type: 'confirmAccept',
+    payload: req.body
+  });
+
+  openConfirms[req.body.confirmId] = null;
+  const checkConfirm = () => {
+    if (openConfirms[req.body.confirmId] === null) {
+      setTimeout(() => {
+        checkConfirm();
+      }, 1000);
+      return;
+    }
+    const val = openConfirms[req.body.confirmId];
+    delete openConfirms[req.body.confirmId];
+    res.json({
+      'status': val ? 'acknowledged' : 'rejected'
+    });
+  }
+  checkConfirm();
 });
 
 function checkAllocation(roundId, data, socket) {
@@ -294,7 +320,13 @@ wsServer.on('connection', (socket) => {
   sockets[socket.uuid] = socket;
 
   socket.on('message', (data) => {
-    data = JSON.parse(data);
+    try {
+      data = JSON.parse(data);
+    }
+    catch (exc) {
+      return;
+    }
+
     console.log(data);
     switch (data.type) {
       case 'checkAllocation':
@@ -308,6 +340,11 @@ wsServer.on('connection', (socket) => {
         break
       case 'newRound':
         newRound(data.roundId);
+        break;
+      case 'returnConfirmAccept':
+        if (openConfirms[data.payload.confirmId] !== undefined) {
+          openConfirms[data.payload.confirmId] = data.payload.confirmed;
+        }
         break;
       default:
         break;

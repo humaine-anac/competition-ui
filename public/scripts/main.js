@@ -695,6 +695,20 @@ socket.onmessage = (msg) => {
     case 'chatMessage':
       chatMessage(msg.payload);
       break;
+    case 'confirmAccept':
+      let confirmMessage = `Please Confirm or Reject.\n\n${msg.payload.speaker} proposes to sell you `;
+      confirmMessage += Object.keys(msy.payload.bid.quantity).map((key) => `${msg.payload.bid.quantity[item]} ${item}`).join(', ')
+      confirmMessage += ` for $${msg.payload.bid.price.value}.`;
+      const resp = confirm(confirmMessage);
+      socket.send({
+        roundId,
+        type: 'returnConfirmAccept',
+        payload: {
+          confirmId: msg.payload.confirmId,
+          confirmed: resp,
+        }
+      });
+      break;
   }
 };
 
@@ -704,8 +718,9 @@ window.addEventListener('beforeunload', function (e) {
   if (!completed) {
     let c = confirm('Round still in progress. Are you sure you want to close the window?');
     if (!c) {
-        // Cancel the event
-      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      // Cancel the event
+      // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      e.preventDefault();
       // Chrome requires returnValue to be set
       e.returnValue = '';
     }
