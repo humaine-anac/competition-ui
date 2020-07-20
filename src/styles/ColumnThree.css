@@ -96,3 +96,7 @@ button {
     margin-left: 5%;
     width: 45%;
 }
+
+#save-allocation-block {
+    visibility: hidden;
+}

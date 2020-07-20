@@ -16,7 +16,7 @@ class ColumnThree extends Component {
                         Potential Score: <span id='potential-score'>0</span>
                     </div>
                 </div>
-                <div>
+                <div id="save-allocation-block">
                     <button id="save-allocation">Submit</button>
                     <div style={{display: 'inline-block'}}>
                         Submitted Score: <span id='submitted-score' style={{color: 'red'}}>X</span>

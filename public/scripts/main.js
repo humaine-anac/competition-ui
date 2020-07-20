@@ -552,6 +552,7 @@ function runTimer(type) {
           // ALLOCATION TIMER
           if(type === "start") {
               roundTimerHeader.innerHTML = "Allocation Time:";
+              document.getElementById('save-allocation-block').style.visibility = 'visible';
           }
 
           roundTimer.innerHTML = post;
@@ -685,7 +686,7 @@ socket.onmessage = (msg) => {
     case 'saveAllocationResult':
       if (msg.payload.accepted) {
         document.getElementById('submitted-score').style.color = 'green';
-        document.getElementById('submitted-score').innerText = '✓';
+        document.getElementById('submitted-score').innerText = msg.payload.value;
       }
       updateIngredientsNeeds(msg.payload.allocation);
       break;
@@ -697,7 +698,7 @@ socket.onmessage = (msg) => {
       break;
     case 'confirmAccept':
       let confirmMessage = `Please Confirm or Reject.\n\n${msg.payload.speaker} proposes to sell you `;
-      confirmMessage += Object.keys(msy.payload.bid.quantity).map((key) => `${msg.payload.bid.quantity[item]} ${item}`).join(', ')
+      confirmMessage += Object.keys(msg.payload.bid.quantity).map((item) => `${msg.payload.bid.quantity[item]} ${item}`).join(', ')
       confirmMessage += ` for $${msg.payload.bid.price.value}.`;
       const resp = confirm(confirmMessage);
       socket.send({
