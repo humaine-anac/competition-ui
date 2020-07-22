@@ -9,7 +9,7 @@ webSocket.src = "./scripts/websocket.js";
 webSocket.onload = () => {
   const main = document.createElement('script');
   main.src = './scripts/main.js';
-  document.body.dataset.standalone = process.env.data_standalone;
+
   document.body.appendChild(main);
 }
 
