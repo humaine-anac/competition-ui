@@ -10,11 +10,7 @@ let started = false;
 let completed = false;
 let canSendMessage = true;
 
-let roundId;
-if(document.body.dataset.standalone === "true")
- roundId = "true";
-else
- roundId = parseInt(window.location.hash.substring(1));
+let roundId = document.body.dataset.standalone === "true" ? "true" : window.location.hash.substring(1);
 
 if (!roundId) {
   alert("Cound not find roundId, please make sure it's set");
