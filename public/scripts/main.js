@@ -10,7 +10,11 @@ let started = false;
 let completed = false;
 let canSendMessage = true;
 
-let roundId = parseInt(window.location.hash.substring(1));
+let roundId;
+if(document.body.dataset.standalone === "true")
+ roundId = "true";
+else
+ roundId = parseInt(window.location.hash.substring(1));
 
 if (!roundId) {
   alert("Cound not find roundId, please make sure it's set");
@@ -668,7 +672,7 @@ $('body').on('change', '.allocationInput', function() {
 });
 
 socket.onmessage = (msg) => {
-  if (msg.roundId !== roundId) {
+  if (msg.roundId !== roundId && document.body.dataset.standalone !== "true") {
     console.log('invalid roundId');
     console.log(msg);
     return;
