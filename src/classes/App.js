@@ -7,12 +7,8 @@ import '../styles/human.css';
 
 class App extends Component {
 
-    componentWillMount(){
+    componentDidMount(){
         document.body.dataset.standalone = process.env.REACT_APP_STANDALONE;
-    }
-    
-    componentWillUnmount(){
-        document.body.dataset.standalone = null;
     }
 
     render() {

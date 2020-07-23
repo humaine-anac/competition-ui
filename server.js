@@ -79,6 +79,7 @@ app.post('/startRound', (req, res) => {
 app.post('/endRound', (req, res) => {
   logExpression('Inside /endRound', 2);
   logExpression(req.body, 2);
+  wsServer.broadcast({roundId: req.body.roundId, type: 'endRound', payload: req.body});
   res.json({'status': 'acknowledged'});
 });
 
@@ -313,6 +314,10 @@ async function newRound(roundId) {
   await postToService('environment-orchestrator', '/startRound', new_round);
 }
 
+async function endRound(roundId) {
+    await postToService('environment-orchestrator', '/endRound', {roundId});
+}
+
 wsServer.on('connection', (socket) => {
   if (!socket.uuid) {
     socket.uuid = uuidv4();
@@ -340,6 +345,9 @@ wsServer.on('connection', (socket) => {
         break
       case 'newRound':
         newRound(data.roundId);
+        break;
+      case 'endRound':
+        endRound(data.roundId);
         break;
       case 'returnConfirmAccept':
         if (openConfirms[data.payload.confirmId] !== undefined) {
