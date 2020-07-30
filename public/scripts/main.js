@@ -436,6 +436,12 @@ document.getElementById('save-allocation').addEventListener('click', () => {
 });
 
 document.getElementById('reset-menu').addEventListener('click', () => {
+
+  socket.send({
+    roundId,
+    type: 'endRound'
+  });
+
   startRound();
 });
 

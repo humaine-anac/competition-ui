@@ -6,6 +6,11 @@ import '../styles/App.css';
 import '../styles/human.css';
 
 class App extends Component {
+
+    componentDidMount(){
+        document.body.dataset.standalone = process.env.REACT_APP_STANDALONE;
+    }
+
     render() {
         return (
             <div id="table">
