@@ -688,42 +688,47 @@ socket.onmessage = (msg) => {
     return;
   }
   console.log(msg);
-  switch (msg.type) {
-    case 'setUtility':
-      console.log(msg.payload);
-      create_graph(msg.payload.utility);
-      break;
-    case 'checkAllocationReturn':
-      updateIngredientsNeeds(msg.payload.allocation);
-      document.getElementById('potential-score').innerText = msg.payload.utility.value || 0;
-      break;
-    case 'saveAllocationResult':
-      if (msg.payload.accepted) {
-        document.getElementById('submitted-score').style.color = 'green';
-        document.getElementById('submitted-score').innerText = msg.payload.value;
-      }
-      updateIngredientsNeeds(msg.payload.allocation);
-      break;
-    case 'setRoundMetadata':
-      setRoundMetadata(msg.payload);
-      break;
-    case 'chatMessage':
-      chatMessage(msg.payload);
-      break;
-    case 'confirmAccept':
-      let confirmMessage = `Please Confirm or Reject.\n\n${msg.payload.speaker} proposes to sell you `;
-      confirmMessage += Object.keys(msg.payload.bid.quantity).map((item) => `${msg.payload.bid.quantity[item]} ${item}`).join(', ')
-      confirmMessage += ` for $${msg.payload.bid.price.value}.`;
-      const resp = confirm(confirmMessage);
-      socket.send({
-        roundId,
-        type: 'returnConfirmAccept',
-        payload: {
-          confirmId: msg.payload.confirmId,
-          confirmed: resp,
+  try {
+    switch (msg.type) {
+      case 'setUtility':
+        console.log(msg.payload);
+        create_graph(msg.payload.utility);
+        break;
+      case 'checkAllocationReturn':
+        updateIngredientsNeeds(msg.payload.allocation);
+        document.getElementById('potential-score').innerText = msg.payload.utility.value || 0;
+        break;
+      case 'saveAllocationResult':
+        if (msg.payload.accepted) {
+          document.getElementById('submitted-score').style.color = 'green';
+          document.getElementById('submitted-score').innerText = msg.payload.value;
         }
-      });
-      break;
+        updateIngredientsNeeds(msg.payload.allocation);
+        break;
+      case 'setRoundMetadata':
+        setRoundMetadata(msg.payload);
+        break;
+      case 'chatMessage':
+        chatMessage(msg.payload);
+        break;
+      case 'confirmAccept':
+        let confirmMessage = `Please Confirm or Reject.\n\n${msg.payload.speaker} proposes to sell you `;
+        confirmMessage += Object.keys(msg.payload.bid.quantity).map((item) => `${msg.payload.bid.quantity[item]} ${item}`).join(', ')
+        confirmMessage += ` for $${msg.payload.bid.price.value}.`;
+        const resp = confirm(confirmMessage);
+        socket.send({
+          roundId,
+          type: 'returnConfirmAccept',
+          payload: {
+            confirmId: msg.payload.confirmId,
+            confirmed: resp,
+          }
+        });
+        break;
+    }
+  }
+  catch (e) {
+    console.error(e);
   }
 };
 
