@@ -701,9 +701,10 @@ socket.onmessage = (msg) => {
       case 'saveAllocationResult':
         if (msg.payload.accepted) {
           document.getElementById('submitted-score').style.color = 'green';
-          document.getElementById('submitted-score').innerText = msg.payload.value;
+          document.getElementById('submitted-score').innerText = msg.payload.utility.value;
         }
         updateIngredientsNeeds(msg.payload.allocation);
+        document.getElementById('potential-score').innerText = msg.payload.utility.value || 0;
         break;
       case 'setRoundMetadata':
         setRoundMetadata(msg.payload);

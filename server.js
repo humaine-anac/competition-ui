@@ -166,44 +166,50 @@ function checkAllocation(roundId, data, socket) {
   promises.push(postToService('utility-generator', '/calculateUtility/buyer', payload));
 
   Promise.all(promises).then((results) => {
-    socket.send(JSON.stringify({roundId, type: 'checkAllocationReturn', payload: {allocation: results[0], utility: results[1]}}));
+    socket.send(JSON.stringify({roundId, type: 'checkAllocationReturn', payload: {
+      allocation: results[0],
+      utility: results[1]
+    }}));
   });
 }
 
 async function saveAllocation(roundId, data, socket) {
   logExpression('in func saveAllocation', 1);
-  const result = await postToService('utility-generator', '/checkAllocation', data);
-  if (result.sufficient) {
-    logExpression('allocation is sufficient', 1);
-    const payload = {
-      currencyUnit: "USD",
-      utility: humanUtilityFunctions[roundId].utility,
-      bundle: {
-        products: data.allocation.products
-      }
-    };
+  const promises = [];
+  promises.push(postToService('utility-generator', '/checkAllocation', data));
+  const payload = {
+    currencyUnit: "USD",
+    utility: humanUtilityFunctions[roundId].utility,
+    bundle: {
+      products: data.allocation.products
+    }
+  };
+  logExpression(payload, 1);
+  promises.push(postToService('utility-generator', '/calculateUtility/human', payload));
 
-    const promises = [];
-    promises.push(postToService('utility-generator', '/calculateUtility/human', payload));
+  const results = await Promise.all(promises);
+
+  if (results[0].sufficient) {
+    logExpression('allocation is sufficient', 1);
+
     console.log(JSON.stringify(payload.bundle.products, null, 2));
-    promises.push(postToService('environment-orchestrator', '/receiveHumanAllocation', {
+    const humanAllocResult = await postToService('environment-orchestrator', '/receiveHumanAllocation', {
       roundId: roundId,
       payload: payload.bundle.products
-    }));
-
-    Promise.all(promises).then((calcResult) => {
-      logExpression('result of /receiveHumanAllocation');
-      logExpression(calcResult[1], 1);
-      socket.send(JSON.stringify({
-        type: 'saveAllocationResult',
-        roundId,
-        payload: {
-          accepted: calcResult[1].status.toLowerCase() === 'acknowledged',
-          value: calcResult[0].value,
-          allocation: result
-        }
-      }));
     });
+
+
+    logExpression('result of /receiveHumanAllocation');
+    logExpression(humanAllocResult, 1);
+    socket.send(JSON.stringify({
+      type: 'saveAllocationResult',
+      roundId,
+      payload: {
+        accepted: humanAllocResult.status.toLowerCase() === 'acknowledged',
+        utility: results[1],
+        allocation: results[0]
+      }
+    }));
   }
   else {
     socket.send(JSON.stringify({
@@ -211,7 +217,8 @@ async function saveAllocation(roundId, data, socket) {
       roundId,
       payload: {
         accepted: false,
-        allocation: result,
+        allocation: results[0],
+        utility: results[1]
       }
     }));
   }
