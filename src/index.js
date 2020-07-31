@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from "./classes/App"
 
-const version = 1;
+const version = 2;
 
 const webSocket = document.createElement('script');
 webSocket.src = `./scripts/websocket.js?v=${version}`;
