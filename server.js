@@ -211,7 +211,7 @@ async function saveAllocation(roundId, data, socket) {
       roundId,
       payload: {
         accepted: false,
-        data: body,
+        allocation: result,
       }
     }));
   }
