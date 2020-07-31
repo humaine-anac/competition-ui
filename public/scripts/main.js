@@ -129,6 +129,7 @@ function create_graph(data) {
   );
 
   document.querySelector('div[id="graph-container"]').style.display = 'block';
+  document.getElementById('calculate-utility-block').style.visibility = 'visible';
 
   var x_min = 0;
 

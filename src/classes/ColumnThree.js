@@ -10,7 +10,7 @@ class ColumnThree extends Component {
             <div id="what-i-can-make" className="unifiedSchema">
 
                 <div className="sectionHeaders tableHead">Allocation Manager</div>
-                <div style={{marginTop: '5%', marginBottom: '1%'}}>
+                <div id='calculate-utility-block' style={{marginTop: '5%', marginBottom: '1%', visibility: 'hidden'}}>
                     <button id="calculate-utility">Check</button>
                     <div style={{display: 'inline-block'}}>
                         Potential Score: <span id='potential-score'>0</span>
