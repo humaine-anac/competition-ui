@@ -11,7 +11,7 @@ class ColumnTwo extends Component {
 
                 <div id="message-display"></div>
 
-                <textarea id="user-input-field" placeholder="Start chatting as seller!"></textarea>
+                <textarea id="user-input-field" placeholder="Please wait for round to start to chat!" disabled></textarea>
             </div>
         </div>
     );

@@ -508,6 +508,8 @@ function runTimer(type) {
   var roundTimerHeader = document.querySelector("div[id='roundTimerHeader']");
   var timeLeft = 0;
 
+  const chatInput = document.getElementById('user-input-field');
+
   clearInterval(timer1);
   clearInterval(timer2);
   clearInterval(timer3);
@@ -539,7 +541,10 @@ function runTimer(type) {
       // ROUND TIMER
       if (type === "start") {
           roundTimerHeader.innerHTML = "Negotiation Time:";
+          chatInput.removeAttribute('disabled');
+          chatInput.setAttribute('placeholder', 'Start chatting as seller!');
       }
+
       roundTimer.innerHTML = round;
       if (type === "restart" && timeLeft > 0) {
         roundTimer.innerHTML = timeLeft;
@@ -559,6 +564,8 @@ function runTimer(type) {
           if(type === "start") {
               roundTimerHeader.innerHTML = "Allocation Time:";
               document.getElementById('save-allocation-block').style.visibility = 'visible';
+              chatInput.setAttribute('disabled', 'true');
+              chatInput.setAttribute('placeholder', 'Round has concluded, and chat is closed!');
           }
 
           roundTimer.innerHTML = post;
