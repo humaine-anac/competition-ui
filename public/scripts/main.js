@@ -129,6 +129,7 @@ function create_graph(data) {
   );
 
   document.querySelector('div[id="graph-container"]').style.display = 'block';
+  document.getElementById('calculate-utility-block').style.visibility = 'visible';
 
   var x_min = 0;
 
@@ -436,6 +437,12 @@ document.getElementById('save-allocation').addEventListener('click', () => {
 });
 
 document.getElementById('reset-menu').addEventListener('click', () => {
+
+  socket.send({
+    roundId,
+    type: 'endRound'
+  });
+
   startRound();
 });
 
@@ -502,6 +509,8 @@ function runTimer(type) {
   var roundTimerHeader = document.querySelector("div[id='roundTimerHeader']");
   var timeLeft = 0;
 
+  const chatInput = document.getElementById('user-input-field');
+
   clearInterval(timer1);
   clearInterval(timer2);
   clearInterval(timer3);
@@ -533,7 +542,10 @@ function runTimer(type) {
       // ROUND TIMER
       if (type === "start") {
           roundTimerHeader.innerHTML = "Negotiation Time:";
+          chatInput.removeAttribute('disabled');
+          chatInput.setAttribute('placeholder', 'Start chatting as seller!');
       }
+
       roundTimer.innerHTML = round;
       if (type === "restart" && timeLeft > 0) {
         roundTimer.innerHTML = timeLeft;
@@ -553,6 +565,8 @@ function runTimer(type) {
           if(type === "start") {
               roundTimerHeader.innerHTML = "Allocation Time:";
               document.getElementById('save-allocation-block').style.visibility = 'visible';
+              chatInput.setAttribute('disabled', 'true');
+              chatInput.setAttribute('placeholder', 'Round has concluded, and chat is closed!');
           }
 
           roundTimer.innerHTML = post;
@@ -674,42 +688,48 @@ socket.onmessage = (msg) => {
     return;
   }
   console.log(msg);
-  switch (msg.type) {
-    case 'setUtility':
-      console.log(msg.payload);
-      create_graph(msg.payload.utility);
-      break;
-    case 'checkAllocationReturn':
-      updateIngredientsNeeds(msg.payload.allocation);
-      document.getElementById('potential-score').innerText = msg.payload.utility.value || 0;
-      break;
-    case 'saveAllocationResult':
-      if (msg.payload.accepted) {
-        document.getElementById('submitted-score').style.color = 'green';
-        document.getElementById('submitted-score').innerText = msg.payload.value;
-      }
-      updateIngredientsNeeds(msg.payload.allocation);
-      break;
-    case 'setRoundMetadata':
-      setRoundMetadata(msg.payload);
-      break;
-    case 'chatMessage':
-      chatMessage(msg.payload);
-      break;
-    case 'confirmAccept':
-      let confirmMessage = `Please Confirm or Reject.\n\n${msg.payload.speaker} proposes to sell you `;
-      confirmMessage += Object.keys(msg.payload.bid.quantity).map((item) => `${msg.payload.bid.quantity[item]} ${item}`).join(', ')
-      confirmMessage += ` for $${msg.payload.bid.price.value}.`;
-      const resp = confirm(confirmMessage);
-      socket.send({
-        roundId,
-        type: 'returnConfirmAccept',
-        payload: {
-          confirmId: msg.payload.confirmId,
-          confirmed: resp,
+  try {
+    switch (msg.type) {
+      case 'setUtility':
+        console.log(msg.payload);
+        create_graph(msg.payload.utility);
+        break;
+      case 'checkAllocationReturn':
+        updateIngredientsNeeds(msg.payload.allocation);
+        document.getElementById('potential-score').innerText = msg.payload.utility.value || 0;
+        break;
+      case 'saveAllocationResult':
+        if (msg.payload.accepted) {
+          document.getElementById('submitted-score').style.color = 'green';
+          document.getElementById('submitted-score').innerText = msg.payload.utility.value;
         }
-      });
-      break;
+        updateIngredientsNeeds(msg.payload.allocation);
+        document.getElementById('potential-score').innerText = msg.payload.utility.value || 0;
+        break;
+      case 'setRoundMetadata':
+        setRoundMetadata(msg.payload);
+        break;
+      case 'chatMessage':
+        chatMessage(msg.payload);
+        break;
+      case 'confirmAccept':
+        let confirmMessage = `Please Confirm or Reject.\n\n${msg.payload.speaker} proposes to sell you `;
+        confirmMessage += Object.keys(msg.payload.bid.quantity).map((item) => `${msg.payload.bid.quantity[item]} ${item}`).join(', ')
+        confirmMessage += ` for $${msg.payload.bid.price.value}.`;
+        const resp = confirm(confirmMessage);
+        socket.send({
+          roundId,
+          type: 'returnConfirmAccept',
+          payload: {
+            confirmId: msg.payload.confirmId,
+            confirmed: resp,
+          }
+        });
+        break;
+    }
+  }
+  catch (e) {
+    console.error(e);
   }
 };
 

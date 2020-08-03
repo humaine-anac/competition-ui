@@ -6,13 +6,9 @@ import '../styles/App.css';
 import '../styles/human.css';
 
 class App extends Component {
-
-    componentWillMount(){
-        document.body.dataset.standalone = process.env.REACT_APP_STANDALONE;
-    }
     
-    componentWillUnmount(){
-        document.body.dataset.standalone = null;
+    componentDidMount(){
+        document.body.dataset.standalone = process.env.REACT_APP_STANDALONE;
     }
 
     render() {

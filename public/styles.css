@@ -32,4 +32,8 @@ input {
     width: 20%;
     line-height: 1.15;
     margin: 0;
-  }
+}
+
+input[type=number] {
+    width: 50px;
+}

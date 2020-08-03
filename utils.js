@@ -36,9 +36,10 @@ module.exports.postToService = async (service, route, data) => {
     return JSON.parse(body);
   }
   catch (exc) {
-    logExpression('Could not parse response', 2);
-    logExpression(body, 2);
-    throw exc;
+    logExpression('Could not parse response');
+    logExpression(body);
+    //throw exc;
+    return {}
   }
 };
 
